@@ -1,0 +1,103 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@theme {
+  --color-bg: #0B0F14;
+  --color-surface: #111827;
+  --color-surface2: #1a2235;
+  --color-border: rgba(30,40,60,0.6);
+  --color-purple: #7C3AED;
+  --color-green: #22C55E;
+  --color-cyan: #06B6D4;
+  --color-critical: #EF4444;
+  --color-high: #F97316;
+  --color-medium: #EAB308;
+  --color-low: #14B8A6;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0B0F14;
+  color: #e2e8f0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Monospace for all technical data */
+.font-mono {
+  font-family: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: #0B0F14; }
+::-webkit-scrollbar-thumb { background: rgba(30,40,60,0.8); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(50,65,100,0.9); }
+
+/* ── Critical glow ── */
+.shadow-critical {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.35);
+}
+
+/* ── Recessed card border ── */
+.border-recessed {
+  border: 1px solid rgba(30, 40, 60, 0.5);
+}
+
+/* ── War-room surface ── */
+.surface-card {
+  background-color: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 40, 60, 0.5);
+}
+
+/* ── Active pipeline ring ── */
+.pipeline-active-ring {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.4);
+}
+
+/* ── Pipeline beam animation ── */
+@keyframes beam-travel {
+  0%   { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+
+/* ── Critical border pulse (3 pulses, stops) ── */
+@keyframes critical-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  50%       { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.35); }
+}
+
+/* ── Status dot glow ── */
+@keyframes layer-glow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+.animate-layer-glow   { animation: layer-glow 1.5s ease-in-out infinite; }
+.animate-critical-pulse { animation: critical-pulse 1s ease-in-out 3; }
+
+/* ── Ambient background noise texture ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(124,58,237,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(6,182,212,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#root { position: relative; z-index: 1; }

@@ -1,0 +1,1978 @@
+[
+  {
+    "incident_id": "MASTER-D5E5EC118F",
+    "is_master": true,
+    "correlated_log_ids": [
+      "INC-9CB0579DEC85",
+      "INC-37DE9EC09A01",
+      "INC-AF85CEA68998",
+      "INC-7BE7846A2963",
+      "INC-64A8CEA9D649",
+      "INC-88E76C96D1EC",
+      "INC-BECB7CDDB65B",
+      "INC-0679715ED3AD"
+    ],
+    "affected_user": "finance_mgr@bank.local",
+    "event_count": 8,
+    "timestamp": "2026-03-27T10:52:10+00:00",
+    "log_type": "auth",
+    "format": "correlated_master",
+    "raw_event": {
+      "source_ip": "10.0.20.15",
+      "destination_ip": null,
+      "affected_user": "finance_mgr@bank.local",
+      "affected_host": null,
+      "port": null,
+      "protocol": null,
+      "action": "Multi-Stage BEC Attack (8 events)",
+      "timestamp": "2026-03-27T11:00:00+00:00"
+    },
+    "engine_1_anomaly": {
+      "pyod_score": 0.58,
+      "is_outlier": true,
+      "ueba_flags": [
+        "new_source_ip",
+        "risky_signin"
+      ],
+      "anomaly_score": 0.725,
+      "anomaly_flagged": true
+    },
+    "engine_2_threat_intel": {
+      "ioc_matches": [],
+      "threat_intel_match": true,
+      "mitre_tactic": "Multi-Stage BEC Kill Chain",
+      "mitre_technique": "T1078+T1564+T1114+T1048",
+      "mitre_technique_name": "Valid Accounts \u2192 Hide Artifacts \u2192 Email Collection \u2192 Exfiltration"
+    },
+    "engine_3_correlation": {
+      "event_count": 8,
+      "attack_timeline": [
+        {
+          "timestamp": "2026-03-27T10:52:10+00:00",
+          "event": "auth_event",
+          "detail": "Sign-in activity from 10.0.20.15 [T1078 Defense Evasion]",
+          "incident_id": "INC-9CB0579DEC85",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T10:52:10+00:00",
+          "event": "auth_event",
+          "detail": "Sign-in activity from 10.0.20.15 [T1078 Defense Evasion]",
+          "incident_id": "INC-9CB0579DEC85",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T10:55:00+00:00",
+          "event": "auth_event",
+          "detail": "MailItemsAccessed from 10.0.20.15 [T1078 Defense Evasion]",
+          "incident_id": "INC-37DE9EC09A01",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T10:55:00+00:00",
+          "event": "auth_event",
+          "detail": "MailItemsAccessed from 10.0.20.15 [T1078 Defense Evasion]",
+          "incident_id": "INC-37DE9EC09A01",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T10:55:00+00:00",
+          "event": "auth_event",
+          "detail": "MailItemsAccessed from 10.0.20.15 [T1078 Defense Evasion]",
+          "incident_id": "INC-37DE9EC09A01",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:00:00+00:00",
+          "event": "auth_event",
+          "detail": "Sign-in activity from 193.168.0.50 [T1078 Defense Evasion]",
+          "incident_id": "INC-AF85CEA68998",
+          "severity": "MEDIUM"
+        },
+        {
+          "timestamp": "2026-03-27T11:00:00+00:00",
+          "event": "auth_event",
+          "detail": "Sign-in activity from 193.168.0.50 [T1078 Defense Evasion]",
+          "incident_id": "INC-AF85CEA68998",
+          "severity": "MEDIUM"
+        },
+        {
+          "timestamp": "2026-03-27T11:00:00+00:00",
+          "event": "auth_event",
+          "detail": "Sign-in activity from 193.168.0.50 [T1078 Defense Evasion]",
+          "incident_id": "INC-AF85CEA68998",
+          "severity": "MEDIUM"
+        },
+        {
+          "timestamp": "2026-03-27T11:05:00+00:00",
+          "event": "auth_event",
+          "detail": "New-InboxRule from 193.168.0.50 [T1078 Defense Evasion]",
+          "incident_id": "INC-7BE7846A2963",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:05:00+00:00",
+          "event": "auth_event",
+          "detail": "New-InboxRule from 193.168.0.50 [T1078 Defense Evasion]",
+          "incident_id": "INC-7BE7846A2963",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:05:00+00:00",
+          "event": "auth_event",
+          "detail": "New-InboxRule from 193.168.0.50 [T1078 Defense Evasion]",
+          "incident_id": "INC-7BE7846A2963",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:10:00+00:00",
+          "event": "auth_event",
+          "detail": "MailItemsAccessed from 193.168.0.50 [T1078 Defense Evasion]",
+          "incident_id": "INC-64A8CEA9D649",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:10:00+00:00",
+          "event": "auth_event",
+          "detail": "MailItemsAccessed from 193.168.0.50 [T1078 Defense Evasion]",
+          "incident_id": "INC-64A8CEA9D649",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:10:00+00:00",
+          "event": "auth_event",
+          "detail": "MailItemsAccessed from 193.168.0.50 [T1078 Defense Evasion]",
+          "incident_id": "INC-64A8CEA9D649",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:15:00+00:00",
+          "event": "auth_event",
+          "detail": "FileDownloaded from 193.168.0.50 [T1048 Exfiltration]",
+          "incident_id": "INC-88E76C96D1EC",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:15:00+00:00",
+          "event": "auth_event",
+          "detail": "FileDownloaded from 193.168.0.50 [T1048 Exfiltration]",
+          "incident_id": "INC-88E76C96D1EC",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:15:00+00:00",
+          "event": "auth_event",
+          "detail": "FileDownloaded from 193.168.0.50 [T1048 Exfiltration]",
+          "incident_id": "INC-88E76C96D1EC",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:15:00+00:00",
+          "event": "auth_event",
+          "detail": "FileDownloaded from 193.168.0.50 [T1048 Exfiltration]",
+          "incident_id": "INC-88E76C96D1EC",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:16:30+00:00",
+          "event": "auth_event",
+          "detail": "FileDownloaded from 10.0.20.15 [T1048 Exfiltration]",
+          "incident_id": "INC-BECB7CDDB65B",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:16:30+00:00",
+          "event": "auth_event",
+          "detail": "FileDownloaded from 10.0.20.15 [T1048 Exfiltration]",
+          "incident_id": "INC-BECB7CDDB65B",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:16:30+00:00",
+          "event": "auth_event",
+          "detail": "FileDownloaded from 10.0.20.15 [T1048 Exfiltration]",
+          "incident_id": "INC-BECB7CDDB65B",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:20:00+00:00",
+          "event": "auth_event",
+          "detail": "Send from 193.168.0.50 [T1046 Discovery]",
+          "incident_id": "INC-0679715ED3AD",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:20:00+00:00",
+          "event": "auth_event",
+          "detail": "Send from 193.168.0.50 [T1046 Discovery]",
+          "incident_id": "INC-0679715ED3AD",
+          "severity": "NONE"
+        },
+        {
+          "timestamp": "2026-03-27T11:20:00+00:00",
+          "event": "auth_event",
+          "detail": "Send from 193.168.0.50 [T1046 Discovery]",
+          "incident_id": "INC-0679715ED3AD",
+          "severity": "NONE"
+        }
+      ]
+    },
+    "layer4_cvss": {
+      "base_score": 6.1,
+      "severity": "CRITICAL",
+      "requires_auto_block": true,
+      "dora_compliance": true
+    },
+    "ai_analysis": null,
+    "suggested_playbook": {
+      "id": "PB-BEC-001-MASTER",
+      "title": "\ud83d\udea8 Critical: Multi-Stage Account Takeover (BEC) Detected",
+      "phases": [
+        {
+          "phase": "Phase 1 \u2014 Preparation & Scoping",
+          "icon": "\ud83d\udd0d",
+          "color": "#F97316",
+          "steps": [
+            "Confirm the suspicious sign-in from Moscow (193.168.0.50) \u2014 verify it is not a VPN or authorised travel",
+            "Cross-reference the source IP against threat intel feeds (AbuseIPDB, VirusTotal)",
+            "Identify all sessions initiated from this IP in the last 30 days",
+            "Notify the SOC Tier-2 lead and open a P1 incident ticket immediately",
+            "Preserve all Azure AD sign-in logs, Exchange audit logs, and SharePoint access logs"
+          ]
+        },
+        {
+          "phase": "Phase 2 \u2014 Containment",
+          "icon": "\ud83d\udee1\ufe0f",
+          "color": "#EF4444",
+          "steps": [
+            "IMMEDIATE: Disable the compromised account in Azure AD",
+            "Revoke ALL active sessions and OAuth tokens for the affected account",
+            "Block the attacker IP and its /24 subnet at the perimeter firewall",
+            "Delete the malicious inbox rule forwarding to external address",
+            "Disable external email forwarding at the Exchange Online tenant level",
+            "Block the external forwarding domain at the email gateway",
+            "Revoke all SharePoint external sharing links created during the incident window"
+          ]
+        },
+        {
+          "phase": "Phase 3 \u2014 Investigation",
+          "icon": "\ud83d\udd2c",
+          "color": "#EAB308",
+          "steps": [
+            "Audit all MailItemsAccessed events \u2014 identify which emails the attacker read",
+            "Review the inbox rule parameters: financial keywords indicate BEC fraud intent",
+            "Identify all files downloaded from SharePoint during the compromise window",
+            "Check if any wire transfers or financial instructions were sent from the compromised account",
+            "Review all emails sent FROM the account during the compromise window for impersonation",
+            "Determine if any other accounts received suspicious emails from the compromised mailbox",
+            "Correlate the attacker IP with any other accounts in the tenant for lateral spread"
+          ]
+        },
+        {
+          "phase": "Phase 4 \u2014 Recovery & Hardening",
+          "icon": "\ud83d\udd04",
+          "color": "#22C55E",
+          "steps": [
+            "Re-enable the account only after full credential reset and MFA re-enrollment",
+            "Implement Conditional Access policy: block sign-ins from high-risk countries",
+            "Enable Microsoft Defender for Office 365 Safe Links and Safe Attachments",
+            "Configure Azure AD Identity Protection to auto-block high-risk sign-ins",
+            "Notify Finance team to verify all pending wire transfers and payment instructions",
+            "Submit incident to DORA regulatory reporting if financial data was exfiltrated (72-hour clock)",
+            "Conduct post-incident review and update BEC detection rules in SIEM"
+          ]
+        }
+      ],
+      "auto_remediation": [
+        "Revoke all OAuth tokens for the affected account via Microsoft Graph API",
+        "Block attacker IP /24 subnet at Azure Firewall via automated runbook",
+        "Delete malicious inbox rule via Exchange Online PowerShell",
+        "Trigger Conditional Access policy: require MFA + compliant device for next login",
+        "Alert Finance Operations team via automated PagerDuty P1 escalation"
+      ],
+      "kill_chain": [
+        {
+          "stage": "Initial Access",
+          "tactic": "T1078 Valid Accounts",
+          "event": "Risky sign-in from foreign IP",
+          "severity": "HIGH"
+        },
+        {
+          "stage": "Persistence",
+          "tactic": "T1564 Hide Artifacts",
+          "event": "New-InboxRule forwarding to external address",
+          "severity": "CRITICAL"
+        },
+        {
+          "stage": "Collection",
+          "tactic": "T1114 Email Collection",
+          "event": "MailItemsAccessed \u2014 attacker reading emails",
+          "severity": "HIGH"
+        },
+        {
+          "stage": "Exfiltration",
+          "tactic": "T1048 Exfiltration Over Alt Protocol",
+          "event": "FileDownloaded: sensitive financial document",
+          "severity": "CRITICAL"
+        }
+      ],
+      "dora_flags": [
+        "Potential DORA Article 18 trigger \u2014 financial data accessed",
+        "72-hour regulatory notification window may apply",
+        "Cross-border data transfer detected"
+      ],
+      "steps": [
+        "Confirm the suspicious sign-in from Moscow (193.168.0.50) \u2014 verify it is not a VPN or authorised travel",
+        "Cross-reference the source IP against threat intel feeds (AbuseIPDB, VirusTotal)",
+        "Identify all sessions initiated from this IP in the last 30 days",
+        "Notify the SOC Tier-2 lead and open a P1 incident ticket immediately",
+        "Preserve all Azure AD sign-in logs, Exchange audit logs, and SharePoint access logs",
+        "IMMEDIATE: Disable the compromised account in Azure AD",
+        "Revoke ALL active sessions and OAuth tokens for the affected account",
+        "Block the attacker IP and its /24 subnet at the perimeter firewall",
+        "Delete the malicious inbox rule forwarding to external address",
+        "Disable external email forwarding at the Exchange Online tenant level",
+        "Block the external forwarding domain at the email gateway",
+        "Revoke all SharePoint external sharing links created during the incident window",
+        "Audit all MailItemsAccessed events \u2014 identify which emails the attacker read",
+        "Review the inbox rule parameters: financial keywords indicate BEC fraud intent",
+        "Identify all files downloaded from SharePoint during the compromise window",
+        "Check if any wire transfers or financial instructions were sent from the compromised account",
+        "Review all emails sent FROM the account during the compromise window for impersonation",
+        "Determine if any other accounts received suspicious emails from the compromised mailbox",
+        "Correlate the attacker IP with any other accounts in the tenant for lateral spread",
+        "Re-enable the account only after full credential reset and MFA re-enrollment",
+        "Implement Conditional Access policy: block sign-ins from high-risk countries",
+        "Enable Microsoft Defender for Office 365 Safe Links and Safe Attachments",
+        "Configure Azure AD Identity Protection to auto-block high-risk sign-ins",
+        "Notify Finance team to verify all pending wire transfers and payment instructions",
+        "Submit incident to DORA regulatory reporting if financial data was exfiltrated (72-hour clock)",
+        "Conduct post-incident review and update BEC detection rules in SIEM"
+      ],
+      "tactic_match": [
+        "Initial Access",
+        "Persistence",
+        "Collection",
+        "Exfiltration"
+      ],
+      "severity_floor": "CRITICAL"
+    },
+    "_correlated_detections": [
+      {
+        "incident_id": "INC-9CB0579DEC85",
+        "timestamp": "2026-03-27T10:52:10+00:00",
+        "log_type": "auth",
+        "format": "uploaded_log",
+        "raw_event": {
+          "source_ip": "10.0.20.15",
+          "destination_ip": null,
+          "affected_user": "finance_mgr@bank.local",
+          "affected_host": null,
+          "port": null,
+          "protocol": null,
+          "action": "Sign-in activity",
+          "timestamp": "2026-03-27T10:52:10+00:00"
+        },
+        "engine_1_anomaly": {
+          "pyod_score": 0.2,
+          "is_outlier": false,
+          "ueba_flags": [
+            "new_source_ip"
+          ],
+          "anomaly_score": 0.25,
+          "anomaly_flagged": true
+        },
+        "engine_2_threat_intel": {
+          "ioc_matches": [],
+          "threat_intel_match": false,
+          "mitre_tactic": "Defense Evasion",
+          "mitre_technique": "T1078",
+          "mitre_technique_name": "Valid Accounts",
+          "mitre_url": "https://attack.mitre.org/techniques/T1078",
+          "rule_id": "AUTH_PRIV_ABUSE",
+          "rule_name": "Privileged Account Abuse",
+          "rule_confidence": 0.8
+        },
+        "engine_3_correlation": {
+          "event_count": 2,
+          "attack_timeline": [
+            {
+              "timestamp": "2026-03-27T10:52:10+00:00",
+              "event": "auth_event",
+              "detail": "Sign-in activity from 10.0.20.15 [T1078 Defense Evasion]",
+              "incident_id": "INC-9CB0579DEC85",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T10:55:00+00:00",
+              "event": "auth_event",
+              "detail": "MailItemsAccessed from 10.0.20.15 [T1078 Defense Evasion]",
+              "incident_id": "INC-37DE9EC09A01",
+              "severity": "NONE"
+            }
+          ],
+          "correlated_ids": [
+            "INC-37DE9EC09A01"
+          ]
+        },
+        "layer4_cvss": {
+          "base_score": 0.0,
+          "severity": "NONE",
+          "requires_auto_block": false,
+          "dora_compliance": false,
+          "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+        },
+        "ai_analysis": null,
+        "suggested_playbook": {
+          "id": "PB-LT-AUTH",
+          "title": "Account Takeover Response \u2014 finance_mgr@bank.local",
+          "steps": [
+            "Disable the account for finance_mgr@bank.local in Azure AD / Active Directory immediately",
+            "Revoke all active sessions and OAuth tokens for finance_mgr@bank.local",
+            "Block source IP 10.0.20.15 at the perimeter firewall",
+            "Force MFA re-enrollment before re-activating the account",
+            "Review sign-in logs for the past 30 days for anomalous locations",
+            "Check for new inbox rules, mail forwarding, or delegate access",
+            "Notify finance_mgr@bank.local and their line manager via out-of-band channel"
+          ],
+          "auto_remediation": [
+            "Revoke all OAuth tokens for finance_mgr@bank.local via Microsoft Graph API",
+            "Block 10.0.20.15 at perimeter firewall",
+            "Trigger Conditional Access: require compliant device on next login"
+          ],
+          "tactic_match": [],
+          "severity_floor": "LOW",
+          "phases": null,
+          "kill_chain": null
+        },
+        "_layer1": {
+          "log_family": "unknown",
+          "classification_conf": "low",
+          "temporal_features": {
+            "event_count_1m": 0,
+            "event_count_5m": 0,
+            "event_count_15m": 0,
+            "event_count_1h": 0,
+            "is_frequency_accelerating": false,
+            "is_first_seen_source": true,
+            "sequence_position_in_1m": 0
+          },
+          "behavioral_features": {
+            "deviation_score": 0.5,
+            "is_off_hours_for_user": false,
+            "is_new_ip_for_user": true,
+            "is_new_user": true,
+            "excessive_failed_logins": false,
+            "baseline_established": false,
+            "normal_hours_count": 1,
+            "normal_ips_count": 1
+          },
+          "statistical_features": null,
+          "identity_features": {
+            "raw_source": "{'ip': '10.0.20.15', 'user': {'name': 'finance_mgr@bank.local'}}",
+            "event_type": "Sign-in activity",
+            "event_id": null,
+            "is_identity_event": true,
+            "is_azure_identity": false,
+            "is_windows_auth": false,
+            "is_signin_activity": true,
+            "location": null,
+            "client_app_used": null,
+            "risk_state": null,
+            "risk_level": "",
+            "risk_event_types": null,
+            "is_risky_signin": false,
+            "has_unfamiliar_features": false,
+            "has_suspicious_ip_flag": false,
+            "logon_type": null,
+            "is_successful_login": false,
+            "is_failed_login": false,
+            "is_network_logon": false,
+            "is_remote_interactive": false,
+            "uses_ntlm": false,
+            "sub_status": null
+          },
+          "feature_warnings": [
+            "log_family is unknown \u2014 family-specific features skipped"
+          ]
+        },
+        "_layer2_risk": {
+          "risk_score": 0.475,
+          "severity": "MEDIUM",
+          "confidence": 0.8,
+          "components": {
+            "rule_weight_component": 0.312,
+            "anomaly_component": 0.062,
+            "ioc_component": 0.0,
+            "correlation_component": 0.075,
+            "chain_component": 0.0,
+            "graph_component": 0.025
+          }
+        }
+      },
+      {
+        "incident_id": "INC-37DE9EC09A01",
+        "timestamp": "2026-03-27T10:55:00+00:00",
+        "log_type": "auth",
+        "format": "uploaded_log",
+        "raw_event": {
+          "source_ip": "10.0.20.15",
+          "destination_ip": null,
+          "affected_user": "finance_mgr@bank.local",
+          "affected_host": null,
+          "port": null,
+          "protocol": null,
+          "action": "MailItemsAccessed",
+          "timestamp": "2026-03-27T10:55:00+00:00"
+        },
+        "engine_1_anomaly": {
+          "pyod_score": 0.06,
+          "is_outlier": false,
+          "ueba_flags": [],
+          "anomaly_score": 0.075,
+          "anomaly_flagged": false
+        },
+        "engine_2_threat_intel": {
+          "ioc_matches": [],
+          "threat_intel_match": false,
+          "mitre_tactic": "Defense Evasion",
+          "mitre_technique": "T1078",
+          "mitre_technique_name": "Valid Accounts",
+          "mitre_url": "https://attack.mitre.org/techniques/T1078",
+          "rule_id": "AUTH_PRIV_ABUSE",
+          "rule_name": "Privileged Account Abuse",
+          "rule_confidence": 0.8
+        },
+        "engine_3_correlation": {
+          "event_count": 3,
+          "attack_timeline": [
+            {
+              "timestamp": "2026-03-27T10:52:10+00:00",
+              "event": "auth_event",
+              "detail": "Sign-in activity from 10.0.20.15 [T1078 Defense Evasion]",
+              "incident_id": "INC-9CB0579DEC85",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T10:55:00+00:00",
+              "event": "auth_event",
+              "detail": "MailItemsAccessed from 10.0.20.15 [T1078 Defense Evasion]",
+              "incident_id": "INC-37DE9EC09A01",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:00:00+00:00",
+              "event": "auth_event",
+              "detail": "Sign-in activity from 193.168.0.50 [T1078 Defense Evasion]",
+              "incident_id": "INC-AF85CEA68998",
+              "severity": "MEDIUM"
+            }
+          ],
+          "correlated_ids": [
+            "INC-9CB0579DEC85",
+            "INC-AF85CEA68998"
+          ]
+        },
+        "layer4_cvss": {
+          "base_score": 0.0,
+          "severity": "NONE",
+          "requires_auto_block": false,
+          "dora_compliance": false,
+          "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+        },
+        "ai_analysis": null,
+        "suggested_playbook": {
+          "id": "PB-LT-AUTH",
+          "title": "Account Takeover Response \u2014 finance_mgr@bank.local",
+          "steps": [
+            "Disable the account for finance_mgr@bank.local in Azure AD / Active Directory immediately",
+            "Revoke all active sessions and OAuth tokens for finance_mgr@bank.local",
+            "Block source IP 10.0.20.15 at the perimeter firewall",
+            "Force MFA re-enrollment before re-activating the account",
+            "Review sign-in logs for the past 30 days for anomalous locations",
+            "Check for new inbox rules, mail forwarding, or delegate access",
+            "Notify finance_mgr@bank.local and their line manager via out-of-band channel"
+          ],
+          "auto_remediation": [
+            "Revoke all OAuth tokens for finance_mgr@bank.local via Microsoft Graph API",
+            "Block 10.0.20.15 at perimeter firewall",
+            "Trigger Conditional Access: require compliant device on next login"
+          ],
+          "tactic_match": [],
+          "severity_floor": "LOW",
+          "phases": null,
+          "kill_chain": null
+        },
+        "_layer1": {
+          "log_family": "unknown",
+          "classification_conf": "low",
+          "temporal_features": {
+            "event_count_1m": 0,
+            "event_count_5m": 0,
+            "event_count_15m": 0,
+            "event_count_1h": 0,
+            "is_frequency_accelerating": false,
+            "is_first_seen_source": false,
+            "sequence_position_in_1m": 0
+          },
+          "behavioral_features": {
+            "deviation_score": 0.15,
+            "is_off_hours_for_user": false,
+            "is_new_ip_for_user": false,
+            "is_new_user": false,
+            "excessive_failed_logins": false,
+            "baseline_established": false,
+            "normal_hours_count": 1,
+            "normal_ips_count": 1
+          },
+          "statistical_features": null,
+          "identity_features": {
+            "raw_source": "{'ip': '10.0.20.15', 'user': {'name': 'finance_mgr@bank.local'}}",
+            "event_type": "MailItemsAccessed",
+            "event_id": null,
+            "is_identity_event": false,
+            "is_azure_identity": false,
+            "is_windows_auth": false,
+            "is_signin_activity": false,
+            "location": null,
+            "client_app_used": null,
+            "risk_state": null,
+            "risk_level": "",
+            "risk_event_types": null,
+            "is_risky_signin": false,
+            "has_unfamiliar_features": false,
+            "has_suspicious_ip_flag": false,
+            "logon_type": null,
+            "is_successful_login": false,
+            "is_failed_login": false,
+            "is_network_logon": false,
+            "is_remote_interactive": false,
+            "uses_ntlm": false,
+            "sub_status": null
+          },
+          "feature_warnings": [
+            "log_family is unknown \u2014 family-specific features skipped"
+          ]
+        },
+        "_layer2_risk": {
+          "risk_score": 0.431,
+          "severity": "MEDIUM",
+          "confidence": 0.8,
+          "components": {
+            "rule_weight_component": 0.312,
+            "anomaly_component": 0.019,
+            "ioc_component": 0.0,
+            "correlation_component": 0.075,
+            "chain_component": 0.0,
+            "graph_component": 0.025
+          }
+        }
+      },
+      {
+        "incident_id": "INC-AF85CEA68998",
+        "timestamp": "2026-03-27T11:00:00+00:00",
+        "log_type": "auth",
+        "format": "uploaded_log",
+        "raw_event": {
+          "source_ip": "193.168.0.50",
+          "destination_ip": null,
+          "affected_user": "finance_mgr@bank.local",
+          "affected_host": null,
+          "port": null,
+          "protocol": null,
+          "action": "Sign-in activity",
+          "timestamp": "2026-03-27T11:00:00+00:00"
+        },
+        "engine_1_anomaly": {
+          "pyod_score": 0.58,
+          "is_outlier": true,
+          "ueba_flags": [
+            "new_source_ip",
+            "risky_signin"
+          ],
+          "anomaly_score": 0.725,
+          "anomaly_flagged": true
+        },
+        "engine_2_threat_intel": {
+          "ioc_matches": [],
+          "threat_intel_match": true,
+          "mitre_tactic": "Defense Evasion",
+          "mitre_technique": "T1078",
+          "mitre_technique_name": "Valid Accounts",
+          "mitre_url": "https://attack.mitre.org/techniques/T1078",
+          "rule_id": "AUTH_PRIV_ABUSE",
+          "rule_name": "Privileged Account Abuse",
+          "rule_confidence": 0.8
+        },
+        "engine_3_correlation": {
+          "event_count": 3,
+          "attack_timeline": [
+            {
+              "timestamp": "2026-03-27T10:55:00+00:00",
+              "event": "auth_event",
+              "detail": "MailItemsAccessed from 10.0.20.15 [T1078 Defense Evasion]",
+              "incident_id": "INC-37DE9EC09A01",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:00:00+00:00",
+              "event": "auth_event",
+              "detail": "Sign-in activity from 193.168.0.50 [T1078 Defense Evasion]",
+              "incident_id": "INC-AF85CEA68998",
+              "severity": "MEDIUM"
+            },
+            {
+              "timestamp": "2026-03-27T11:05:00+00:00",
+              "event": "auth_event",
+              "detail": "New-InboxRule from 193.168.0.50 [T1078 Defense Evasion]",
+              "incident_id": "INC-7BE7846A2963",
+              "severity": "NONE"
+            }
+          ],
+          "correlated_ids": [
+            "INC-37DE9EC09A01",
+            "INC-7BE7846A2963"
+          ]
+        },
+        "layer4_cvss": {
+          "base_score": 6.1,
+          "severity": "MEDIUM",
+          "requires_auto_block": false,
+          "dora_compliance": true,
+          "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:N"
+        },
+        "ai_analysis": null,
+        "suggested_playbook": {
+          "id": "PB-LT-AUTH",
+          "title": "Account Takeover Response \u2014 finance_mgr@bank.local",
+          "steps": [
+            "Disable the account for finance_mgr@bank.local in Azure AD / Active Directory immediately",
+            "Revoke all active sessions and OAuth tokens for finance_mgr@bank.local",
+            "Block source IP 193.168.0.50 at the perimeter firewall",
+            "Force MFA re-enrollment before re-activating the account",
+            "Review sign-in logs for the past 30 days for anomalous locations",
+            "Check for new inbox rules, mail forwarding, or delegate access",
+            "Notify finance_mgr@bank.local and their line manager via out-of-band channel"
+          ],
+          "auto_remediation": [
+            "Revoke all OAuth tokens for finance_mgr@bank.local via Microsoft Graph API",
+            "Block 193.168.0.50 at perimeter firewall",
+            "Trigger Conditional Access: require compliant device on next login"
+          ],
+          "dora_flags": [
+            "Potential DORA Article 18 trigger \u2014 high-risk event detected",
+            "72-hour regulatory notification window may apply",
+            "Preserve all evidence for regulatory audit trail"
+          ],
+          "tactic_match": [],
+          "severity_floor": "LOW",
+          "phases": null,
+          "kill_chain": null
+        },
+        "_layer1": {
+          "log_family": "unknown",
+          "classification_conf": "low",
+          "temporal_features": {
+            "event_count_1m": 0,
+            "event_count_5m": 0,
+            "event_count_15m": 0,
+            "event_count_1h": 0,
+            "is_frequency_accelerating": false,
+            "is_first_seen_source": true,
+            "sequence_position_in_1m": 0
+          },
+          "behavioral_features": {
+            "deviation_score": 0.35,
+            "is_off_hours_for_user": false,
+            "is_new_ip_for_user": true,
+            "is_new_user": false,
+            "excessive_failed_logins": false,
+            "baseline_established": false,
+            "normal_hours_count": 1,
+            "normal_ips_count": 2
+          },
+          "statistical_features": null,
+          "identity_features": {
+            "raw_source": "{'ip': '193.168.0.50', 'user': {'name': 'finance_mgr@bank.local'}}",
+            "event_type": "Sign-in activity",
+            "event_id": null,
+            "is_identity_event": true,
+            "is_azure_identity": false,
+            "is_windows_auth": false,
+            "is_signin_activity": true,
+            "location": null,
+            "client_app_used": null,
+            "risk_state": null,
+            "risk_level": "high",
+            "risk_event_types": null,
+            "is_risky_signin": true,
+            "has_unfamiliar_features": false,
+            "has_suspicious_ip_flag": false,
+            "logon_type": null,
+            "is_successful_login": false,
+            "is_failed_login": false,
+            "is_network_logon": false,
+            "is_remote_interactive": false,
+            "uses_ntlm": false,
+            "sub_status": null
+          },
+          "feature_warnings": [
+            "log_family is unknown \u2014 family-specific features skipped"
+          ]
+        },
+        "_layer2_risk": {
+          "risk_score": 0.744,
+          "severity": "HIGH",
+          "confidence": 0.8,
+          "components": {
+            "rule_weight_component": 0.312,
+            "anomaly_component": 0.181,
+            "ioc_component": 0.15,
+            "correlation_component": 0.075,
+            "chain_component": 0.0,
+            "graph_component": 0.025
+          }
+        }
+      },
+      {
+        "incident_id": "INC-7BE7846A2963",
+        "timestamp": "2026-03-27T11:05:00+00:00",
+        "log_type": "auth",
+        "format": "uploaded_log",
+        "raw_event": {
+          "source_ip": "193.168.0.50",
+          "destination_ip": null,
+          "affected_user": "finance_mgr@bank.local",
+          "affected_host": null,
+          "port": null,
+          "protocol": null,
+          "action": "New-InboxRule",
+          "timestamp": "2026-03-27T11:05:00+00:00"
+        },
+        "engine_1_anomaly": {
+          "pyod_score": 0.06,
+          "is_outlier": false,
+          "ueba_flags": [],
+          "anomaly_score": 0.075,
+          "anomaly_flagged": false
+        },
+        "engine_2_threat_intel": {
+          "ioc_matches": [],
+          "threat_intel_match": false,
+          "mitre_tactic": "Defense Evasion",
+          "mitre_technique": "T1078",
+          "mitre_technique_name": "Valid Accounts",
+          "mitre_url": "https://attack.mitre.org/techniques/T1078",
+          "rule_id": "AUTH_PRIV_ABUSE",
+          "rule_name": "Privileged Account Abuse",
+          "rule_confidence": 0.8
+        },
+        "engine_3_correlation": {
+          "event_count": 3,
+          "attack_timeline": [
+            {
+              "timestamp": "2026-03-27T11:00:00+00:00",
+              "event": "auth_event",
+              "detail": "Sign-in activity from 193.168.0.50 [T1078 Defense Evasion]",
+              "incident_id": "INC-AF85CEA68998",
+              "severity": "MEDIUM"
+            },
+            {
+              "timestamp": "2026-03-27T11:05:00+00:00",
+              "event": "auth_event",
+              "detail": "New-InboxRule from 193.168.0.50 [T1078 Defense Evasion]",
+              "incident_id": "INC-7BE7846A2963",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:10:00+00:00",
+              "event": "auth_event",
+              "detail": "MailItemsAccessed from 193.168.0.50 [T1078 Defense Evasion]",
+              "incident_id": "INC-64A8CEA9D649",
+              "severity": "NONE"
+            }
+          ],
+          "correlated_ids": [
+            "INC-AF85CEA68998",
+            "INC-64A8CEA9D649"
+          ]
+        },
+        "layer4_cvss": {
+          "base_score": 0.0,
+          "severity": "NONE",
+          "requires_auto_block": false,
+          "dora_compliance": false,
+          "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+        },
+        "ai_analysis": null,
+        "suggested_playbook": {
+          "id": "PB-LT-AUTH",
+          "title": "Account Takeover Response \u2014 finance_mgr@bank.local",
+          "steps": [
+            "Disable the account for finance_mgr@bank.local in Azure AD / Active Directory immediately",
+            "Revoke all active sessions and OAuth tokens for finance_mgr@bank.local",
+            "Block source IP 193.168.0.50 at the perimeter firewall",
+            "Force MFA re-enrollment before re-activating the account",
+            "Review sign-in logs for the past 30 days for anomalous locations",
+            "Check for new inbox rules, mail forwarding, or delegate access",
+            "Notify finance_mgr@bank.local and their line manager via out-of-band channel"
+          ],
+          "auto_remediation": [
+            "Revoke all OAuth tokens for finance_mgr@bank.local via Microsoft Graph API",
+            "Block 193.168.0.50 at perimeter firewall",
+            "Trigger Conditional Access: require compliant device on next login"
+          ],
+          "tactic_match": [],
+          "severity_floor": "LOW",
+          "phases": null,
+          "kill_chain": null
+        },
+        "_layer1": {
+          "log_family": "unknown",
+          "classification_conf": "low",
+          "temporal_features": {
+            "event_count_1m": 0,
+            "event_count_5m": 0,
+            "event_count_15m": 0,
+            "event_count_1h": 0,
+            "is_frequency_accelerating": false,
+            "is_first_seen_source": false,
+            "sequence_position_in_1m": 0
+          },
+          "behavioral_features": {
+            "deviation_score": 0.15,
+            "is_off_hours_for_user": false,
+            "is_new_ip_for_user": false,
+            "is_new_user": false,
+            "excessive_failed_logins": false,
+            "baseline_established": false,
+            "normal_hours_count": 1,
+            "normal_ips_count": 2
+          },
+          "statistical_features": null,
+          "identity_features": {
+            "raw_source": "{'ip': '193.168.0.50', 'user': {'name': 'finance_mgr@bank.local'}}",
+            "event_type": "New-InboxRule",
+            "event_id": null,
+            "is_identity_event": false,
+            "is_azure_identity": false,
+            "is_windows_auth": false,
+            "is_signin_activity": false,
+            "location": null,
+            "client_app_used": null,
+            "risk_state": null,
+            "risk_level": "",
+            "risk_event_types": null,
+            "is_risky_signin": false,
+            "has_unfamiliar_features": false,
+            "has_suspicious_ip_flag": false,
+            "logon_type": null,
+            "is_successful_login": false,
+            "is_failed_login": false,
+            "is_network_logon": false,
+            "is_remote_interactive": false,
+            "uses_ntlm": false,
+            "sub_status": null
+          },
+          "feature_warnings": [
+            "log_family is unknown \u2014 family-specific features skipped"
+          ]
+        },
+        "_layer2_risk": {
+          "risk_score": 0.431,
+          "severity": "MEDIUM",
+          "confidence": 0.8,
+          "components": {
+            "rule_weight_component": 0.312,
+            "anomaly_component": 0.019,
+            "ioc_component": 0.0,
+            "correlation_component": 0.075,
+            "chain_component": 0.0,
+            "graph_component": 0.025
+          }
+        }
+      },
+      {
+        "incident_id": "INC-64A8CEA9D649",
+        "timestamp": "2026-03-27T11:10:00+00:00",
+        "log_type": "auth",
+        "format": "uploaded_log",
+        "raw_event": {
+          "source_ip": "193.168.0.50",
+          "destination_ip": null,
+          "affected_user": "finance_mgr@bank.local",
+          "affected_host": null,
+          "port": null,
+          "protocol": null,
+          "action": "MailItemsAccessed",
+          "timestamp": "2026-03-27T11:10:00+00:00"
+        },
+        "engine_1_anomaly": {
+          "pyod_score": 0.06,
+          "is_outlier": false,
+          "ueba_flags": [],
+          "anomaly_score": 0.075,
+          "anomaly_flagged": false
+        },
+        "engine_2_threat_intel": {
+          "ioc_matches": [],
+          "threat_intel_match": false,
+          "mitre_tactic": "Defense Evasion",
+          "mitre_technique": "T1078",
+          "mitre_technique_name": "Valid Accounts",
+          "mitre_url": "https://attack.mitre.org/techniques/T1078",
+          "rule_id": "AUTH_PRIV_ABUSE",
+          "rule_name": "Privileged Account Abuse",
+          "rule_confidence": 0.8
+        },
+        "engine_3_correlation": {
+          "event_count": 3,
+          "attack_timeline": [
+            {
+              "timestamp": "2026-03-27T11:05:00+00:00",
+              "event": "auth_event",
+              "detail": "New-InboxRule from 193.168.0.50 [T1078 Defense Evasion]",
+              "incident_id": "INC-7BE7846A2963",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:10:00+00:00",
+              "event": "auth_event",
+              "detail": "MailItemsAccessed from 193.168.0.50 [T1078 Defense Evasion]",
+              "incident_id": "INC-64A8CEA9D649",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:15:00+00:00",
+              "event": "auth_event",
+              "detail": "FileDownloaded from 193.168.0.50 [T1048 Exfiltration]",
+              "incident_id": "INC-88E76C96D1EC",
+              "severity": "NONE"
+            }
+          ],
+          "correlated_ids": [
+            "INC-7BE7846A2963",
+            "INC-88E76C96D1EC"
+          ]
+        },
+        "layer4_cvss": {
+          "base_score": 0.0,
+          "severity": "NONE",
+          "requires_auto_block": false,
+          "dora_compliance": false,
+          "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+        },
+        "ai_analysis": null,
+        "suggested_playbook": {
+          "id": "PB-LT-AUTH",
+          "title": "Account Takeover Response \u2014 finance_mgr@bank.local",
+          "steps": [
+            "Disable the account for finance_mgr@bank.local in Azure AD / Active Directory immediately",
+            "Revoke all active sessions and OAuth tokens for finance_mgr@bank.local",
+            "Block source IP 193.168.0.50 at the perimeter firewall",
+            "Force MFA re-enrollment before re-activating the account",
+            "Review sign-in logs for the past 30 days for anomalous locations",
+            "Check for new inbox rules, mail forwarding, or delegate access",
+            "Notify finance_mgr@bank.local and their line manager via out-of-band channel"
+          ],
+          "auto_remediation": [
+            "Revoke all OAuth tokens for finance_mgr@bank.local via Microsoft Graph API",
+            "Block 193.168.0.50 at perimeter firewall",
+            "Trigger Conditional Access: require compliant device on next login"
+          ],
+          "tactic_match": [],
+          "severity_floor": "LOW",
+          "phases": null,
+          "kill_chain": null
+        },
+        "_layer1": {
+          "log_family": "unknown",
+          "classification_conf": "low",
+          "temporal_features": {
+            "event_count_1m": 0,
+            "event_count_5m": 0,
+            "event_count_15m": 0,
+            "event_count_1h": 0,
+            "is_frequency_accelerating": false,
+            "is_first_seen_source": false,
+            "sequence_position_in_1m": 0
+          },
+          "behavioral_features": {
+            "deviation_score": 0.15,
+            "is_off_hours_for_user": false,
+            "is_new_ip_for_user": false,
+            "is_new_user": false,
+            "excessive_failed_logins": false,
+            "baseline_established": false,
+            "normal_hours_count": 1,
+            "normal_ips_count": 2
+          },
+          "statistical_features": null,
+          "identity_features": {
+            "raw_source": "{'ip': '193.168.0.50', 'user': {'name': 'finance_mgr@bank.local'}}",
+            "event_type": "MailItemsAccessed",
+            "event_id": null,
+            "is_identity_event": false,
+            "is_azure_identity": false,
+            "is_windows_auth": false,
+            "is_signin_activity": false,
+            "location": null,
+            "client_app_used": null,
+            "risk_state": null,
+            "risk_level": "",
+            "risk_event_types": null,
+            "is_risky_signin": false,
+            "has_unfamiliar_features": false,
+            "has_suspicious_ip_flag": false,
+            "logon_type": null,
+            "is_successful_login": false,
+            "is_failed_login": false,
+            "is_network_logon": false,
+            "is_remote_interactive": false,
+            "uses_ntlm": false,
+            "sub_status": null
+          },
+          "feature_warnings": [
+            "log_family is unknown \u2014 family-specific features skipped"
+          ]
+        },
+        "_layer2_risk": {
+          "risk_score": 0.431,
+          "severity": "MEDIUM",
+          "confidence": 0.8,
+          "components": {
+            "rule_weight_component": 0.312,
+            "anomaly_component": 0.019,
+            "ioc_component": 0.0,
+            "correlation_component": 0.075,
+            "chain_component": 0.0,
+            "graph_component": 0.025
+          }
+        }
+      },
+      {
+        "incident_id": "INC-88E76C96D1EC",
+        "timestamp": "2026-03-27T11:15:00+00:00",
+        "log_type": "auth",
+        "format": "uploaded_log",
+        "raw_event": {
+          "source_ip": "193.168.0.50",
+          "destination_ip": null,
+          "affected_user": "finance_mgr@bank.local",
+          "affected_host": null,
+          "port": null,
+          "protocol": null,
+          "action": "FileDownloaded",
+          "timestamp": "2026-03-27T11:15:00+00:00"
+        },
+        "engine_1_anomaly": {
+          "pyod_score": 0.0675,
+          "is_outlier": false,
+          "ueba_flags": [],
+          "anomaly_score": 0.075,
+          "anomaly_flagged": false
+        },
+        "engine_2_threat_intel": {
+          "ioc_matches": [],
+          "threat_intel_match": false,
+          "mitre_tactic": "Exfiltration",
+          "mitre_technique": "T1048",
+          "mitre_technique_name": "Exfiltration Over Alternative Protocol",
+          "mitre_url": "https://attack.mitre.org/techniques/T1048",
+          "rule_id": "NET_EXFIL",
+          "rule_name": "Large Data Exfiltration Detected",
+          "rule_confidence": 0.9
+        },
+        "engine_3_correlation": {
+          "event_count": 4,
+          "attack_timeline": [
+            {
+              "timestamp": "2026-03-27T11:10:00+00:00",
+              "event": "auth_event",
+              "detail": "MailItemsAccessed from 193.168.0.50 [T1078 Defense Evasion]",
+              "incident_id": "INC-64A8CEA9D649",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:15:00+00:00",
+              "event": "auth_event",
+              "detail": "FileDownloaded from 193.168.0.50 [T1048 Exfiltration]",
+              "incident_id": "INC-88E76C96D1EC",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:16:30+00:00",
+              "event": "auth_event",
+              "detail": "FileDownloaded from 10.0.20.15 [T1048 Exfiltration]",
+              "incident_id": "INC-BECB7CDDB65B",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:20:00+00:00",
+              "event": "auth_event",
+              "detail": "Send from 193.168.0.50 [T1046 Discovery]",
+              "incident_id": "INC-0679715ED3AD",
+              "severity": "NONE"
+            }
+          ],
+          "correlated_ids": [
+            "INC-64A8CEA9D649",
+            "INC-BECB7CDDB65B",
+            "INC-0679715ED3AD"
+          ]
+        },
+        "layer4_cvss": {
+          "base_score": 0.0,
+          "severity": "NONE",
+          "requires_auto_block": false,
+          "dora_compliance": false,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+        },
+        "ai_analysis": null,
+        "suggested_playbook": {
+          "id": "PB-LT-AUTH",
+          "title": "Account Takeover Response \u2014 finance_mgr@bank.local",
+          "steps": [
+            "Disable the account for finance_mgr@bank.local in Azure AD / Active Directory immediately",
+            "Revoke all active sessions and OAuth tokens for finance_mgr@bank.local",
+            "Block source IP 193.168.0.50 at the perimeter firewall",
+            "Force MFA re-enrollment before re-activating the account",
+            "Review sign-in logs for the past 30 days for anomalous locations",
+            "Check for new inbox rules, mail forwarding, or delegate access",
+            "Notify finance_mgr@bank.local and their line manager via out-of-band channel"
+          ],
+          "auto_remediation": [
+            "Revoke all OAuth tokens for finance_mgr@bank.local via Microsoft Graph API",
+            "Block 193.168.0.50 at perimeter firewall",
+            "Trigger Conditional Access: require compliant device on next login"
+          ],
+          "tactic_match": [],
+          "severity_floor": "LOW",
+          "phases": null,
+          "kill_chain": null
+        },
+        "_layer1": {
+          "log_family": "unknown",
+          "classification_conf": "low",
+          "temporal_features": {
+            "event_count_1m": 0,
+            "event_count_5m": 0,
+            "event_count_15m": 0,
+            "event_count_1h": 0,
+            "is_frequency_accelerating": false,
+            "is_first_seen_source": false,
+            "sequence_position_in_1m": 0
+          },
+          "behavioral_features": {
+            "deviation_score": 0.15,
+            "is_off_hours_for_user": false,
+            "is_new_ip_for_user": false,
+            "is_new_user": false,
+            "excessive_failed_logins": false,
+            "baseline_established": false,
+            "normal_hours_count": 1,
+            "normal_ips_count": 2
+          },
+          "statistical_features": null,
+          "identity_features": {
+            "raw_source": "{'ip': '193.168.0.50', 'user': {'name': 'finance_mgr@bank.local'}}",
+            "event_type": "FileDownloaded",
+            "event_id": null,
+            "is_identity_event": false,
+            "is_azure_identity": false,
+            "is_windows_auth": false,
+            "is_signin_activity": false,
+            "location": null,
+            "client_app_used": null,
+            "risk_state": null,
+            "risk_level": "",
+            "risk_event_types": null,
+            "is_risky_signin": false,
+            "has_unfamiliar_features": false,
+            "has_suspicious_ip_flag": false,
+            "logon_type": null,
+            "is_successful_login": false,
+            "is_failed_login": false,
+            "is_network_logon": false,
+            "is_remote_interactive": false,
+            "uses_ntlm": false,
+            "sub_status": null
+          },
+          "feature_warnings": [
+            "log_family is unknown \u2014 family-specific features skipped"
+          ]
+        },
+        "_layer2_risk": {
+          "risk_score": 0.461,
+          "severity": "MEDIUM",
+          "confidence": 0.9,
+          "components": {
+            "rule_weight_component": 0.332,
+            "anomaly_component": 0.019,
+            "ioc_component": 0.0,
+            "correlation_component": 0.075,
+            "chain_component": 0.01,
+            "graph_component": 0.025
+          }
+        }
+      },
+      {
+        "incident_id": "INC-BECB7CDDB65B",
+        "timestamp": "2026-03-27T11:16:30+00:00",
+        "log_type": "auth",
+        "format": "uploaded_log",
+        "raw_event": {
+          "source_ip": "10.0.20.15",
+          "destination_ip": null,
+          "affected_user": "finance_mgr@bank.local",
+          "affected_host": null,
+          "port": null,
+          "protocol": null,
+          "action": "FileDownloaded",
+          "timestamp": "2026-03-27T11:16:30+00:00"
+        },
+        "engine_1_anomaly": {
+          "pyod_score": 0.0675,
+          "is_outlier": false,
+          "ueba_flags": [],
+          "anomaly_score": 0.075,
+          "anomaly_flagged": false
+        },
+        "engine_2_threat_intel": {
+          "ioc_matches": [],
+          "threat_intel_match": false,
+          "mitre_tactic": "Exfiltration",
+          "mitre_technique": "T1048",
+          "mitre_technique_name": "Exfiltration Over Alternative Protocol",
+          "mitre_url": "https://attack.mitre.org/techniques/T1048",
+          "rule_id": "NET_EXFIL",
+          "rule_name": "Large Data Exfiltration Detected",
+          "rule_confidence": 0.9
+        },
+        "engine_3_correlation": {
+          "event_count": 3,
+          "attack_timeline": [
+            {
+              "timestamp": "2026-03-27T11:15:00+00:00",
+              "event": "auth_event",
+              "detail": "FileDownloaded from 193.168.0.50 [T1048 Exfiltration]",
+              "incident_id": "INC-88E76C96D1EC",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:16:30+00:00",
+              "event": "auth_event",
+              "detail": "FileDownloaded from 10.0.20.15 [T1048 Exfiltration]",
+              "incident_id": "INC-BECB7CDDB65B",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:20:00+00:00",
+              "event": "auth_event",
+              "detail": "Send from 193.168.0.50 [T1046 Discovery]",
+              "incident_id": "INC-0679715ED3AD",
+              "severity": "NONE"
+            }
+          ],
+          "correlated_ids": [
+            "INC-88E76C96D1EC",
+            "INC-0679715ED3AD"
+          ]
+        },
+        "layer4_cvss": {
+          "base_score": 0.0,
+          "severity": "NONE",
+          "requires_auto_block": false,
+          "dora_compliance": false,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+        },
+        "ai_analysis": null,
+        "suggested_playbook": {
+          "id": "PB-LT-AUTH",
+          "title": "Account Takeover Response \u2014 finance_mgr@bank.local",
+          "steps": [
+            "Disable the account for finance_mgr@bank.local in Azure AD / Active Directory immediately",
+            "Revoke all active sessions and OAuth tokens for finance_mgr@bank.local",
+            "Block source IP 10.0.20.15 at the perimeter firewall",
+            "Force MFA re-enrollment before re-activating the account",
+            "Review sign-in logs for the past 30 days for anomalous locations",
+            "Check for new inbox rules, mail forwarding, or delegate access",
+            "Notify finance_mgr@bank.local and their line manager via out-of-band channel"
+          ],
+          "auto_remediation": [
+            "Revoke all OAuth tokens for finance_mgr@bank.local via Microsoft Graph API",
+            "Block 10.0.20.15 at perimeter firewall",
+            "Trigger Conditional Access: require compliant device on next login"
+          ],
+          "tactic_match": [],
+          "severity_floor": "LOW",
+          "phases": null,
+          "kill_chain": null
+        },
+        "_layer1": {
+          "log_family": "unknown",
+          "classification_conf": "low",
+          "temporal_features": {
+            "event_count_1m": 0,
+            "event_count_5m": 0,
+            "event_count_15m": 0,
+            "event_count_1h": 0,
+            "is_frequency_accelerating": false,
+            "is_first_seen_source": false,
+            "sequence_position_in_1m": 0
+          },
+          "behavioral_features": {
+            "deviation_score": 0.15,
+            "is_off_hours_for_user": false,
+            "is_new_ip_for_user": false,
+            "is_new_user": false,
+            "excessive_failed_logins": false,
+            "baseline_established": false,
+            "normal_hours_count": 1,
+            "normal_ips_count": 2
+          },
+          "statistical_features": null,
+          "identity_features": {
+            "raw_source": "{'ip': '10.0.20.15', 'user': {'name': 'finance_mgr@bank.local'}}",
+            "event_type": "FileDownloaded",
+            "event_id": null,
+            "is_identity_event": false,
+            "is_azure_identity": false,
+            "is_windows_auth": false,
+            "is_signin_activity": false,
+            "location": null,
+            "client_app_used": null,
+            "risk_state": null,
+            "risk_level": "",
+            "risk_event_types": null,
+            "is_risky_signin": false,
+            "has_unfamiliar_features": false,
+            "has_suspicious_ip_flag": false,
+            "logon_type": null,
+            "is_successful_login": false,
+            "is_failed_login": false,
+            "is_network_logon": false,
+            "is_remote_interactive": false,
+            "uses_ntlm": false,
+            "sub_status": null
+          },
+          "feature_warnings": [
+            "log_family is unknown \u2014 family-specific features skipped"
+          ]
+        },
+        "_layer2_risk": {
+          "risk_score": 0.461,
+          "severity": "MEDIUM",
+          "confidence": 0.9,
+          "components": {
+            "rule_weight_component": 0.332,
+            "anomaly_component": 0.019,
+            "ioc_component": 0.0,
+            "correlation_component": 0.075,
+            "chain_component": 0.01,
+            "graph_component": 0.025
+          }
+        }
+      },
+      {
+        "incident_id": "INC-0679715ED3AD",
+        "timestamp": "2026-03-27T11:20:00+00:00",
+        "log_type": "auth",
+        "format": "uploaded_log",
+        "raw_event": {
+          "source_ip": "193.168.0.50",
+          "destination_ip": null,
+          "affected_user": "finance_mgr@bank.local",
+          "affected_host": null,
+          "port": null,
+          "protocol": null,
+          "action": "Send",
+          "timestamp": "2026-03-27T11:20:00+00:00"
+        },
+        "engine_1_anomaly": {
+          "pyod_score": 0.066,
+          "is_outlier": false,
+          "ueba_flags": [],
+          "anomaly_score": 0.075,
+          "anomaly_flagged": false
+        },
+        "engine_2_threat_intel": {
+          "ioc_matches": [],
+          "threat_intel_match": false,
+          "mitre_tactic": "Discovery",
+          "mitre_technique": "T1046",
+          "mitre_technique_name": "Network Service Discovery",
+          "mitre_url": "https://attack.mitre.org/techniques/T1046",
+          "rule_id": "NET_PORTSCAN",
+          "rule_name": "Port Scan Detected",
+          "rule_confidence": 0.88
+        },
+        "engine_3_correlation": {
+          "event_count": 3,
+          "attack_timeline": [
+            {
+              "timestamp": "2026-03-27T11:15:00+00:00",
+              "event": "auth_event",
+              "detail": "FileDownloaded from 193.168.0.50 [T1048 Exfiltration]",
+              "incident_id": "INC-88E76C96D1EC",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:16:30+00:00",
+              "event": "auth_event",
+              "detail": "FileDownloaded from 10.0.20.15 [T1048 Exfiltration]",
+              "incident_id": "INC-BECB7CDDB65B",
+              "severity": "NONE"
+            },
+            {
+              "timestamp": "2026-03-27T11:20:00+00:00",
+              "event": "auth_event",
+              "detail": "Send from 193.168.0.50 [T1046 Discovery]",
+              "incident_id": "INC-0679715ED3AD",
+              "severity": "NONE"
+            }
+          ],
+          "correlated_ids": [
+            "INC-88E76C96D1EC",
+            "INC-BECB7CDDB65B"
+          ]
+        },
+        "layer4_cvss": {
+          "base_score": 0.0,
+          "severity": "NONE",
+          "requires_auto_block": false,
+          "dora_compliance": false,
+          "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+        },
+        "ai_analysis": null,
+        "suggested_playbook": {
+          "id": "PB-LT-AUTH",
+          "title": "Account Takeover Response \u2014 finance_mgr@bank.local",
+          "steps": [
+            "Disable the account for finance_mgr@bank.local in Azure AD / Active Directory immediately",
+            "Revoke all active sessions and OAuth tokens for finance_mgr@bank.local",
+            "Block source IP 193.168.0.50 at the perimeter firewall",
+            "Force MFA re-enrollment before re-activating the account",
+            "Review sign-in logs for the past 30 days for anomalous locations",
+            "Check for new inbox rules, mail forwarding, or delegate access",
+            "Notify finance_mgr@bank.local and their line manager via out-of-band channel"
+          ],
+          "auto_remediation": [
+            "Revoke all OAuth tokens for finance_mgr@bank.local via Microsoft Graph API",
+            "Block 193.168.0.50 at perimeter firewall",
+            "Trigger Conditional Access: require compliant device on next login"
+          ],
+          "tactic_match": [],
+          "severity_floor": "LOW",
+          "phases": null,
+          "kill_chain": null
+        },
+        "_layer1": {
+          "log_family": "unknown",
+          "classification_conf": "low",
+          "temporal_features": {
+            "event_count_1m": 0,
+            "event_count_5m": 0,
+            "event_count_15m": 0,
+            "event_count_1h": 0,
+            "is_frequency_accelerating": false,
+            "is_first_seen_source": false,
+            "sequence_position_in_1m": 0
+          },
+          "behavioral_features": {
+            "deviation_score": 0.15,
+            "is_off_hours_for_user": false,
+            "is_new_ip_for_user": false,
+            "is_new_user": false,
+            "excessive_failed_logins": false,
+            "baseline_established": false,
+            "normal_hours_count": 1,
+            "normal_ips_count": 2
+          },
+          "statistical_features": null,
+          "identity_features": {
+            "raw_source": "{'ip': '193.168.0.50', 'user': {'name': 'finance_mgr@bank.local'}}",
+            "event_type": "Send",
+            "event_id": null,
+            "is_identity_event": false,
+            "is_azure_identity": false,
+            "is_windows_auth": false,
+            "is_signin_activity": false,
+            "location": null,
+            "client_app_used": null,
+            "risk_state": null,
+            "risk_level": "",
+            "risk_event_types": null,
+            "is_risky_signin": false,
+            "has_unfamiliar_features": false,
+            "has_suspicious_ip_flag": false,
+            "logon_type": null,
+            "is_successful_login": false,
+            "is_failed_login": false,
+            "is_network_logon": false,
+            "is_remote_interactive": false,
+            "uses_ntlm": false,
+            "sub_status": null
+          },
+          "feature_warnings": [
+            "log_family is unknown \u2014 family-specific features skipped"
+          ]
+        },
+        "_layer2_risk": {
+          "risk_score": 0.329,
+          "severity": "LOW",
+          "confidence": 0.88,
+          "components": {
+            "rule_weight_component": 0.21,
+            "anomaly_component": 0.019,
+            "ioc_component": 0.0,
+            "correlation_component": 0.075,
+            "chain_component": 0.0,
+            "graph_component": 0.025
+          }
+        }
+      }
+    ],
+    "_layer1": {
+      "log_family": "unknown",
+      "classification_conf": "low",
+      "temporal_features": {
+        "event_count_1m": 0,
+        "event_count_5m": 0,
+        "event_count_15m": 0,
+        "event_count_1h": 0,
+        "is_frequency_accelerating": false,
+        "is_first_seen_source": true,
+        "sequence_position_in_1m": 0
+      },
+      "behavioral_features": {
+        "deviation_score": 0.35,
+        "is_off_hours_for_user": false,
+        "is_new_ip_for_user": true,
+        "is_new_user": false,
+        "excessive_failed_logins": false,
+        "baseline_established": false,
+        "normal_hours_count": 1,
+        "normal_ips_count": 2
+      },
+      "statistical_features": null,
+      "identity_features": {
+        "raw_source": "{'ip': '193.168.0.50', 'user': {'name': 'finance_mgr@bank.local'}}",
+        "event_type": "Sign-in activity",
+        "event_id": null,
+        "is_identity_event": true,
+        "is_azure_identity": false,
+        "is_windows_auth": false,
+        "is_signin_activity": true,
+        "location": null,
+        "client_app_used": null,
+        "risk_state": null,
+        "risk_level": "high",
+        "risk_event_types": null,
+        "is_risky_signin": true,
+        "has_unfamiliar_features": false,
+        "has_suspicious_ip_flag": false,
+        "logon_type": null,
+        "is_successful_login": false,
+        "is_failed_login": false,
+        "is_network_logon": false,
+        "is_remote_interactive": false,
+        "uses_ntlm": false,
+        "sub_status": null
+      },
+      "feature_warnings": [
+        "log_family is unknown \u2014 family-specific features skipped"
+      ]
+    },
+    "_layer2_risk": {
+      "risk_score": 0.95,
+      "severity": "CRITICAL"
+    }
+  },
+  {
+    "incident_id": "INC-1F2B0CB517C3",
+    "timestamp": "2026-03-27T11:01:30+00:00",
+    "log_type": "auth",
+    "format": "uploaded_log",
+    "raw_event": {
+      "source_ip": "10.0.25.10",
+      "destination_ip": null,
+      "affected_user": "hr.user@bank.local",
+      "affected_host": null,
+      "port": null,
+      "protocol": null,
+      "action": "Sign-in activity",
+      "timestamp": "2026-03-27T11:01:30+00:00"
+    },
+    "engine_1_anomaly": {
+      "pyod_score": 0.2,
+      "is_outlier": false,
+      "ueba_flags": [
+        "new_source_ip"
+      ],
+      "anomaly_score": 0.25,
+      "anomaly_flagged": true
+    },
+    "engine_2_threat_intel": {
+      "ioc_matches": [],
+      "threat_intel_match": false,
+      "mitre_tactic": "Defense Evasion",
+      "mitre_technique": "T1078",
+      "mitre_technique_name": "Valid Accounts",
+      "mitre_url": "https://attack.mitre.org/techniques/T1078",
+      "rule_id": "AUTH_PRIV_ABUSE",
+      "rule_name": "Privileged Account Abuse",
+      "rule_confidence": 0.8
+    },
+    "engine_3_correlation": {
+      "event_count": 1,
+      "attack_timeline": [
+        {
+          "timestamp": "2026-03-27T11:01:30+00:00",
+          "event": "auth_event",
+          "detail": "Sign-in activity from 10.0.25.10 [T1078 Defense Evasion]",
+          "incident_id": "INC-1F2B0CB517C3",
+          "severity": "NONE"
+        }
+      ],
+      "correlated_ids": []
+    },
+    "layer4_cvss": {
+      "base_score": 0.0,
+      "severity": "NONE",
+      "requires_auto_block": false,
+      "dora_compliance": false,
+      "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+    },
+    "ai_analysis": null,
+    "suggested_playbook": {
+      "id": "PB-LT-AUTH",
+      "title": "Account Takeover Response \u2014 hr.user@bank.local",
+      "steps": [
+        "Disable the account for hr.user@bank.local in Azure AD / Active Directory immediately",
+        "Revoke all active sessions and OAuth tokens for hr.user@bank.local",
+        "Block source IP 10.0.25.10 at the perimeter firewall",
+        "Force MFA re-enrollment before re-activating the account",
+        "Review sign-in logs for the past 30 days for anomalous locations",
+        "Check for new inbox rules, mail forwarding, or delegate access",
+        "Notify hr.user@bank.local and their line manager via out-of-band channel"
+      ],
+      "auto_remediation": [
+        "Revoke all OAuth tokens for hr.user@bank.local via Microsoft Graph API",
+        "Block 10.0.25.10 at perimeter firewall",
+        "Trigger Conditional Access: require compliant device on next login"
+      ],
+      "tactic_match": [],
+      "severity_floor": "LOW",
+      "phases": null,
+      "kill_chain": null
+    },
+    "_layer1": {
+      "log_family": "unknown",
+      "classification_conf": "low",
+      "temporal_features": {
+        "event_count_1m": 0,
+        "event_count_5m": 0,
+        "event_count_15m": 0,
+        "event_count_1h": 0,
+        "is_frequency_accelerating": false,
+        "is_first_seen_source": true,
+        "sequence_position_in_1m": 0
+      },
+      "behavioral_features": {
+        "deviation_score": 0.5,
+        "is_off_hours_for_user": false,
+        "is_new_ip_for_user": true,
+        "is_new_user": true,
+        "excessive_failed_logins": false,
+        "baseline_established": false,
+        "normal_hours_count": 1,
+        "normal_ips_count": 1
+      },
+      "statistical_features": null,
+      "identity_features": {
+        "raw_source": "{'ip': '10.0.25.10', 'user': {'name': 'hr.user@bank.local'}}",
+        "event_type": "Sign-in activity",
+        "event_id": null,
+        "is_identity_event": true,
+        "is_azure_identity": false,
+        "is_windows_auth": false,
+        "is_signin_activity": true,
+        "location": null,
+        "client_app_used": null,
+        "risk_state": null,
+        "risk_level": "",
+        "risk_event_types": null,
+        "is_risky_signin": false,
+        "has_unfamiliar_features": false,
+        "has_suspicious_ip_flag": false,
+        "logon_type": null,
+        "is_successful_login": false,
+        "is_failed_login": false,
+        "is_network_logon": false,
+        "is_remote_interactive": false,
+        "uses_ntlm": false,
+        "sub_status": null
+      },
+      "feature_warnings": [
+        "log_family is unknown \u2014 family-specific features skipped"
+      ]
+    },
+    "_layer2_risk": {
+      "risk_score": 0.475,
+      "severity": "MEDIUM",
+      "confidence": 0.8,
+      "components": {
+        "rule_weight_component": 0.312,
+        "anomaly_component": 0.062,
+        "ioc_component": 0.0,
+        "correlation_component": 0.075,
+        "chain_component": 0.0,
+        "graph_component": 0.025
+      }
+    }
+  },
+  {
+    "incident_id": "INC-97D50ADDD87D",
+    "timestamp": "2026-03-27T11:06:00+00:00",
+    "log_type": "auth",
+    "format": "uploaded_log",
+    "raw_event": {
+      "source_ip": "10.0.30.5",
+      "destination_ip": null,
+      "affected_user": "it.admin@bank.local",
+      "affected_host": null,
+      "port": null,
+      "protocol": null,
+      "action": "New-InboxRule",
+      "timestamp": "2026-03-27T11:06:00+00:00"
+    },
+    "engine_1_anomaly": {
+      "pyod_score": 0.2,
+      "is_outlier": false,
+      "ueba_flags": [
+        "new_source_ip"
+      ],
+      "anomaly_score": 0.25,
+      "anomaly_flagged": true
+    },
+    "engine_2_threat_intel": {
+      "ioc_matches": [],
+      "threat_intel_match": false,
+      "mitre_tactic": "Defense Evasion",
+      "mitre_technique": "T1078",
+      "mitre_technique_name": "Valid Accounts",
+      "mitre_url": "https://attack.mitre.org/techniques/T1078",
+      "rule_id": "AUTH_PRIV_ABUSE",
+      "rule_name": "Privileged Account Abuse",
+      "rule_confidence": 0.8
+    },
+    "engine_3_correlation": {
+      "event_count": 1,
+      "attack_timeline": [
+        {
+          "timestamp": "2026-03-27T11:06:00+00:00",
+          "event": "auth_event",
+          "detail": "New-InboxRule from 10.0.30.5 [T1078 Defense Evasion]",
+          "incident_id": "INC-97D50ADDD87D",
+          "severity": "NONE"
+        }
+      ],
+      "correlated_ids": []
+    },
+    "layer4_cvss": {
+      "base_score": 0.0,
+      "severity": "NONE",
+      "requires_auto_block": false,
+      "dora_compliance": false,
+      "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N"
+    },
+    "ai_analysis": null,
+    "suggested_playbook": {
+      "id": "PB-LT-AUTH",
+      "title": "Account Takeover Response \u2014 it.admin@bank.local",
+      "steps": [
+        "Disable the account for it.admin@bank.local in Azure AD / Active Directory immediately",
+        "Revoke all active sessions and OAuth tokens for it.admin@bank.local",
+        "Block source IP 10.0.30.5 at the perimeter firewall",
+        "Force MFA re-enrollment before re-activating the account",
+        "Review sign-in logs for the past 30 days for anomalous locations",
+        "Check for new inbox rules, mail forwarding, or delegate access",
+        "Notify it.admin@bank.local and their line manager via out-of-band channel"
+      ],
+      "auto_remediation": [
+        "Revoke all OAuth tokens for it.admin@bank.local via Microsoft Graph API",
+        "Block 10.0.30.5 at perimeter firewall",
+        "Trigger Conditional Access: require compliant device on next login"
+      ],
+      "tactic_match": [],
+      "severity_floor": "LOW",
+      "phases": null,
+      "kill_chain": null
+    },
+    "_layer1": {
+      "log_family": "unknown",
+      "classification_conf": "low",
+      "temporal_features": {
+        "event_count_1m": 0,
+        "event_count_5m": 0,
+        "event_count_15m": 0,
+        "event_count_1h": 0,
+        "is_frequency_accelerating": false,
+        "is_first_seen_source": true,
+        "sequence_position_in_1m": 0
+      },
+      "behavioral_features": {
+        "deviation_score": 0.5,
+        "is_off_hours_for_user": false,
+        "is_new_ip_for_user": true,
+        "is_new_user": true,
+        "excessive_failed_logins": false,
+        "baseline_established": false,
+        "normal_hours_count": 1,
+        "normal_ips_count": 1
+      },
+      "statistical_features": null,
+      "identity_features": {
+        "raw_source": "{'ip': '10.0.30.5', 'user': {'name': 'it.admin@bank.local'}}",
+        "event_type": "New-InboxRule",
+        "event_id": null,
+        "is_identity_event": false,
+        "is_azure_identity": false,
+        "is_windows_auth": false,
+        "is_signin_activity": false,
+        "location": null,
+        "client_app_used": null,
+        "risk_state": null,
+        "risk_level": "",
+        "risk_event_types": null,
+        "is_risky_signin": false,
+        "has_unfamiliar_features": false,
+        "has_suspicious_ip_flag": false,
+        "logon_type": null,
+        "is_successful_login": false,
+        "is_failed_login": false,
+        "is_network_logon": false,
+        "is_remote_interactive": false,
+        "uses_ntlm": false,
+        "sub_status": null
+      },
+      "feature_warnings": [
+        "log_family is unknown \u2014 family-specific features skipped"
+      ]
+    },
+    "_layer2_risk": {
+      "risk_score": 0.475,
+      "severity": "MEDIUM",
+      "confidence": 0.8,
+      "components": {
+        "rule_weight_component": 0.312,
+        "anomaly_component": 0.062,
+        "ioc_component": 0.0,
+        "correlation_component": 0.075,
+        "chain_component": 0.0,
+        "graph_component": 0.025
+      }
+    }
+  }
+]
