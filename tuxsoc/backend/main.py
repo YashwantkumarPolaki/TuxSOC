@@ -64,6 +64,7 @@ app.add_middleware(
         "http://127.0.0.1:3000",
         "https://tuxsoc.vercel.app",
         "https://*.vercel.app",
+        "https://*.netlify.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
