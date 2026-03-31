@@ -6,9 +6,11 @@ import type { BackendDetection } from '../types/backend'
 
 interface Props {
   ingestFile: (file: File) => Promise<BackendDetection[]>
+  onUploadStart?: () => void
+  onSuccess?: (detections: BackendDetection[]) => void
 }
 
-export function LogIngest({ ingestFile }: Props) {
+export function LogIngest({ ingestFile, onUploadStart, onSuccess }: Props) {
   const [file, setFile] = useState<File | null>(null)
   const [status, setStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -51,9 +53,11 @@ export function LogIngest({ ingestFile }: Props) {
     setStatus('uploading')
     setErrorMsg(null)
     setResultSummary(null)
+    onUploadStart?.()
 
     try {
       const detections = await ingestFile(file)
+      onSuccess?.(detections)
       setResultSummary(
         `${detections.length} event${detections.length !== 1 ? 's' : ''} processed — ` +
         `${detections.filter(d => d.engine_1_anomaly.anomaly_flagged).length} anomalies flagged`

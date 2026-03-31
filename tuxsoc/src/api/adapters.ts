@@ -281,13 +281,7 @@ function buildRecommendations(d: BackendDetection): string[] {
   return recs
 }
 
-function mapToPlaybook(d: BackendDetection): string | undefined {
-  const action = (d.raw_event.action ?? '').toLowerCase()
-  if (/brute.?force|spray|credential/.test(action)) return 'PB-001'
-  if (/sql.inject|sqli/.test(action)) return 'PB-002'
-  if (/ransomware|dropper|payload/.test(action)) return 'PB-003'
-  if (/swift|transaction|transfer/.test(action)) return 'PB-004'
-  return undefined
+// mapToPlaybook reserved for future use
 }
 
 // ── Pipeline layer health from detections ────────────────────────────────
