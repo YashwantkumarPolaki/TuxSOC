@@ -59,7 +59,6 @@ export function useSimulation() {
     kpi: { totalTickets: 8, criticalCount: 3, avgCvss: 7.4, layersOnline: 8 },
   })
 
-  const eventQueueRef = useRef<string[]>([])
   const beamProgressRef = useRef<number>(-1) // which beam index is active
 
   // Advance beam through pipeline every 600ms

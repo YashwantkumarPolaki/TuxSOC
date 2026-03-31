@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   LayoutDashboard, Ticket, GitBranch, BookOpen,
-  TrendingUp, Upload, Shield, Zap
+  Upload, Shield
 } from 'lucide-react'
 
 const NAV_ITEMS = [

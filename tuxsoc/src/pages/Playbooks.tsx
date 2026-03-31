@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Shield, ChevronRight, CheckCircle2, Zap, AlertTriangle,
+  Shield, ChevronRight, Zap, AlertTriangle,
   BookOpen, GitBranch, AlertCircle
 } from 'lucide-react'
 import type { BackendState } from '../hooks/useBackendData'
