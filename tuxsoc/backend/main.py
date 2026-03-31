@@ -55,17 +55,10 @@ app = FastAPI(
 # ── CORS ──────────────────────────────────────────────────────────────────────
 # Allow the Vite dev server (5173) and any common React dev port.
 # In production, replace with your actual frontend origin.
-origins = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://fluffy-swan-53d209.netlify.app",
-    "https://69cbda7fc4fcd71bfebdea6c--fluffy-swan-53d209.netlify.app",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
