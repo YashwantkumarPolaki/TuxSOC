@@ -282,7 +282,6 @@ function buildRecommendations(d: BackendDetection): string[] {
 }
 
 // mapToPlaybook reserved for future use
-}
 
 // ── Pipeline layer health from detections ────────────────────────────────
 export function derivePipelineHealth(
