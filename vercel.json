@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd tuxsoc && npm install && npm run build",
+  "outputDirectory": "tuxsoc/dist",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
