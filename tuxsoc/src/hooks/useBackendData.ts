@@ -90,17 +90,24 @@ export function useBackendData() {
   const healthChecked = useRef(false)
   const isLive = useRef(false)
 
-  // ── Health probe on mount ─────────────────────────────────────────────
+  // ── Health probe on mount + retry until backend is up ────────────────
   useEffect(() => {
-    checkHealth().then(healthy => {
-      healthChecked.current = true
-      if (!healthy) {
-        setState(prev => ({ ...prev, mode: 'demo' }))
-      } else {
-        isLive.current = true
-        setState(prev => ({ ...prev, mode: 'live' }))
-      }
-    })
+    let cancelled = false
+    const probe = () => {
+      checkHealth().then(healthy => {
+        if (cancelled) return
+        healthChecked.current = true
+        if (!healthy) {
+          setState(prev => ({ ...prev, mode: 'demo' }))
+          setTimeout(() => { if (!cancelled) probe() }, 10000)
+        } else {
+          isLive.current = true
+          setState(prev => ({ ...prev, mode: 'live' }))
+        }
+      })
+    }
+    probe()
+    return () => { cancelled = true }
   }, [])
 
   // ── Beam animation (always runs regardless of mode) ───────────────────
@@ -194,7 +201,7 @@ export function useBackendData() {
     }
 
     poll()
-    const id = setInterval(poll, 3000)
+    const id = setInterval(poll, 10000)
     return () => clearInterval(id)
   }, [state.mode])
 
