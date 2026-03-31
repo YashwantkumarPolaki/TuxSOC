@@ -43,6 +43,7 @@ if _L0_PATH not in sys.path:
 _pipeline_status: dict[str, Any] = {
     "layer_0": "idle", "layer_1": "idle", "layer_2": "idle",
     "layer_3": "idle", "layer_4": "idle", "layer_5": "idle",
+    "layer_6": "idle",
     "last_run": None,  "records_processed": 0,
 }
 
@@ -272,6 +273,76 @@ _PLAYBOOKS: dict[str, dict] = {
     },
 }
 
+# ── CIS Benchmark Playbooks ───────────────────────────────────────────────────
+_PLAYBOOKS["PB-CIS-001-MFA"] = {
+    "id":    "PB-CIS-001-MFA",
+    "title": "CIS Control 6 Violation — MFA Not Enforced",
+    "tactic_match": ["Initial Access", "Credential Access"],
+    "severity_floor": "HIGH",
+    "cis_benchmarks": ["CIS-AUTH-001", "CIS-AUTH-002"],
+    "steps": [
+        "IMMEDIATE: Enforce MFA on all accounts flagged by CIS-AUTH-001 via Azure AD Conditional Access",
+        "Review Azure AD sign-in logs from the last 30 days for accounts missing MFA",
+        "Identify all sign-ins from anomalous IPs that bypassed MFA challenges",
+        "Enable SSPR (Self-Service Password Reset) with MFA re-enrollment for affected users",
+        "Update Conditional Access policies to block legacy authentication protocols",
+        "Audit all service principals and app registrations for non-interactive client credential flows",
+        "Notify the affected users via out-of-band channel to re-enroll in Authenticator",
+        "Schedule a CIS Control 6 compliance review for all privileged accounts",
+    ],
+    "auto_remediation": [
+        "Apply Conditional Access: require MFA for all sign-ins from non-compliant devices",
+        "Block legacy auth protocols (SMTP, IMAP, POP3) at the Exchange Online layer",
+        "Revoke all existing refresh tokens for affected accounts via Microsoft Graph API",
+    ],
+}
+
+_PLAYBOOKS["PB-CIS-002-NETWORK"] = {
+    "id":    "PB-CIS-002-NETWORK",
+    "title": "CIS Control 12/13 Violation — Network Boundary Defence Failure",
+    "tactic_match": ["Lateral Movement", "Command and Control", "Exfiltration"],
+    "severity_floor": "HIGH",
+    "cis_benchmarks": ["CIS-NET-001", "CIS-NET-002", "CIS-NET-003"],
+    "steps": [
+        "Block the offending source IP at the perimeter firewall and WAF immediately",
+        "Review all firewall rules to enforce default-deny on inbound connections",
+        "Audit network segmentation — verify critical VLANs are isolated from general user segments",
+        "Check for any recently added firewall allow-rules that may have created the vulnerability",
+        "Run a network scan to identify any other hosts reachable from the attacker IP",
+        "Review IDS/IPS alert logs for the past 7 days for correlated alerts from this IP",
+        "Enable geo-blocking for countries with no business justification if not already active",
+        "Submit findings to network security team for firewall rule hardening review",
+    ],
+    "auto_remediation": [
+        "Apply ACL rule to block source IP /24 subnet at core switch layer",
+        "Enable IPS blocking mode for lateral movement signatures",
+        "Create a SIEM alert rule for future east-west traffic from this IP range",
+    ],
+}
+
+_PLAYBOOKS["PB-CIS-003-CRED-DUMP"] = {
+    "id":    "PB-CIS-003-CRED-DUMP",
+    "title": "CIS Control 10 Violation — Credential Dumping Tool Detected",
+    "tactic_match": ["Credential Access", "Defense Evasion"],
+    "severity_floor": "CRITICAL",
+    "cis_benchmarks": ["CIS-EP-001", "CIS-EP-002"],
+    "steps": [
+        "IMMEDIATE: Isolate the affected endpoint from all network segments",
+        "Do NOT reboot — preserve volatile memory for forensic triage",
+        "Run EDR full memory scan and capture a memory dump using WinPMEM or equivalent",
+        "Check for Mimikatz, procdump, or LSASS access in EDR telemetry",
+        "Reset ALL passwords for accounts whose credentials may have been dumped",
+        "Rotate all Kerberos service account credentials (krbtgt twice!)",
+        "Audit all endpoints for missing EDR coverage (CIS-EP-002)",
+        "Escalate to Incident Response retainer — credential theft is active intrusion",
+    ],
+    "auto_remediation": [
+        "Trigger EDR process-kill for Mimikatz process tree",
+        "Block execution of procdump.exe and WCE.exe via application control policy",
+        "Force Kerberos ticket renewal platform-wide via Group Policy",
+    ],
+}
+
 # Tactic → playbook_id priority mapping
 _TACTIC_TO_PLAYBOOK: list[tuple[str, str]] = [
     ("Exfiltration",       "PB-002-DATA-EXFILTRATION"),
@@ -292,16 +363,34 @@ _ACTION_TO_PLAYBOOK: list[tuple[str, str]] = [
     ("forwardto",          "PB-006-INBOX-RULE-ABUSE"),
     ("ransomware",         "PB-004-RANSOMWARE"),
     ("vssadmin",           "PB-004-RANSOMWARE"),
-    ("mimikatz",           "PB-004-RANSOMWARE"),
-    ("lsass",              "PB-004-RANSOMWARE"),
+    ("mimikatz",           "PB-CIS-003-CRED-DUMP"),   # ← CIS playbook
+    ("lsass",              "PB-CIS-003-CRED-DUMP"),   # ← CIS playbook
+    ("procdump",           "PB-CIS-003-CRED-DUMP"),   # ← CIS playbook
     ("brute",              "PB-005-BRUTE-FORCE"),
     ("spray",              "PB-005-BRUTE-FORCE"),
     ("login_failed",       "PB-005-BRUTE-FORCE"),
+    ("mfa_bypass",         "PB-CIS-001-MFA"),         # ← CIS playbook
+    ("mfa bypass",         "PB-CIS-001-MFA"),         # ← CIS playbook
     ("filedownloaded",     "PB-002-DATA-EXFILTRATION"),
     ("exfil",              "PB-002-DATA-EXFILTRATION"),
+    ("port_scan",          "PB-CIS-002-NETWORK"),     # ← CIS playbook
     ("lateral",            "PB-003-LATERAL-MOVEMENT"),
     ("sign-in",            "PB-001-ACCOUNT-COMPROMISE"),
     ("mailitemsaccessed",  "PB-001-ACCOUNT-COMPROMISE"),
+]
+
+# CIS benchmark_id keyword → CIS playbook (highest priority, checked first)
+_CIS_TO_PLAYBOOK: list[tuple[str, str]] = [
+    ("CIS-EP-002",  "PB-CIS-003-CRED-DUMP"),
+    ("CIS-EP-001",  "PB-CIS-003-CRED-DUMP"),
+    ("CIS-AUTH-004","PB-006-INBOX-RULE-ABUSE"),
+    ("CIS-AUTH-001","PB-CIS-001-MFA"),
+    ("CIS-AUTH-002","PB-CIS-001-MFA"),
+    ("CIS-NET-001", "PB-CIS-002-NETWORK"),
+    ("CIS-NET-002", "PB-CIS-002-NETWORK"),
+    ("CIS-NET-003", "PB-CIS-002-NETWORK"),
+    ("CIS-DATA-001","PB-002-DATA-EXFILTRATION"),
+    ("CIS-IOT-001", "PB-004-RANSOMWARE"),
 ]
 
 
@@ -313,11 +402,13 @@ def _layer5_playbook(
     affected_user: str | None = None,
     source_ip: str | None = None,
     anomaly_score: float = 0.0,
+    cis_violations: list | None = None,
 ) -> dict:
     """
     Select and dynamically inject context into the most appropriate playbook.
 
     Priority:
+      0. CIS benchmark_id match (highest — direct benchmark-to-playbook map)
       1. Action keyword match
       2. log_type template (auth / web / iot)
       3. MITRE tactic match
@@ -326,6 +417,7 @@ def _layer5_playbook(
     Variable injection:
       - Playbook title and steps reference the real affected_user and source_ip
       - DORA flag only attached when anomaly_score > 0.7
+      - CIS benchmark IDs appended to playbook when violations are present
     """
     import copy
     action_lower = (action or "").lower()
@@ -396,12 +488,27 @@ def _layer5_playbook(
     # Resolve base playbook
     pb: dict | None = None
 
+    # 0. CIS benchmark_id match — highest priority
+    if cis_violations:
+        cis_ids = {v.get("benchmark_id", "") for v in cis_violations}
+        for cis_id, pb_id in _CIS_TO_PLAYBOOK:
+            if cis_id in cis_ids and pb_id in _PLAYBOOKS:
+                pb = copy.deepcopy(_PLAYBOOKS[pb_id])
+                # Annotate which CIS rules triggered this playbook
+                pb["triggered_by_cis"] = [
+                    v for v in cis_violations
+                    if v.get("benchmark_id") == cis_id
+                ]
+                break
+
     # 1. log_type template match
-    if log_type_lower in _AUTH_FAMILIES:
-        pb = _LOG_TYPE_TEMPLATES["auth"]
-    elif log_type_lower in _LOG_TYPE_TEMPLATES:
-        pb = _LOG_TYPE_TEMPLATES[log_type_lower]
-    else:
+    if pb is None:
+        if log_type_lower in _AUTH_FAMILIES:
+            pb = _LOG_TYPE_TEMPLATES["auth"]
+        elif log_type_lower in _LOG_TYPE_TEMPLATES:
+            pb = _LOG_TYPE_TEMPLATES[log_type_lower]
+
+    if pb is None:
         # 2. Action keyword match
         for keyword, pb_id in _ACTION_TO_PLAYBOOK:
             if keyword in action_lower:
@@ -683,42 +790,123 @@ def _build_master_incident(user: str, detections: list[dict]) -> dict:
 
 def _layer4_cvss(detection: dict) -> dict:
     """
-    Delegate to layer_4_cvss.inmemory_cvss which:
-      - Uses real CVSS v3.1 scorer (vector_builder + cvss package) when available
-      - Derives DORA compliance from MITRE tactic + anomaly score (not null)
-      - Falls back to inline formula if `cvss` package not installed
+    Layer 3 → Layer 4 handoff.
+
+    Inputs consumed from the partial detection dict:
+      engine_1_anomaly.anomaly_score   — from Layer 2
+      engine_2_threat_intel.*          — from Layer 2
+      ai_analysis._cvss_vector         — AI-derived CVSS vector (Layer 3, optional)
+      ai_analysis._cis_violations      — CIS violation list injected upstream (optional)
+      is_master                        — BEC master incident flag
+
+    Scoring path (priority order):
+      1. AI CVSS vector → engine_1_scorer.scorer_orchestrator (real CVSS v3.1 engine)
+         with CIS penalty applied via apply_cis_penalties()
+      2. inmemory_cvss fallback (anomaly_score × 10 formula)
+      3. Inline formula last resort
+
+    Output contract (Layer4Cvss):
+      base_score, severity, requires_auto_block, dora_compliance, cvss_vector (optional)
     """
+    e1 = detection.get("engine_1_anomaly", {})
+    e2 = detection.get("engine_2_threat_intel", {})
+    l3 = detection.get("ai_analysis") or {}
+
+    ai_cvss_vec  = l3.get("_cvss_vector")      if isinstance(l3, dict) else None
+    cis_viol     = (l3.get("_cis_violations") or []) if isinstance(l3, dict) else []
+    dora_report  = l3.get("_dora_report")      if isinstance(l3, dict) else None
+
+    # ── Path 1: Full AI CVSS vector + CIS penalty via engine_1_scorer ────
+    if ai_cvss_vec and isinstance(ai_cvss_vec, dict):
+        try:
+            from layer_4_cvss.engine_1_scorer.scorer_orchestrator import score_incident
+            from layer_4_cvss.engine_2_classifier.classifier_orchestrator import classify_incident
+
+            score_result    = score_incident(
+                metrics        = ai_cvss_vec,
+                cis_violations = cis_viol,
+            )
+            classification  = classify_incident(
+                base_score         = score_result["base_score"],
+                cis_violation_count= len(cis_viol),
+                cis_penalty_applied= score_result["cis_penalty_applied"],
+            )
+            severity        = classification["severity"]
+            requires_block  = (
+                severity == "CRITICAL"
+                or (severity == "HIGH" and score_result["cis_penalty_applied"])
+            )
+            # DORA: use AI dora report if present, else derive
+            dora_flag = bool(dora_report) or e1.get("anomaly_score", 0) > 0.7
+            logger.info(
+                "[L4] engine_1_scorer path — score=%.1f sev=%s cis_pen=%s",
+                score_result["base_score"], severity, score_result["cis_penalty_applied"]
+            )
+            return {
+                "base_score":          score_result["base_score"],
+                "severity":            severity,
+                "requires_auto_block": requires_block,
+                "dora_compliance":     dora_flag,
+                "cvss_vector":         score_result.get("cvss_vector"),
+                "cis_penalty_applied": score_result["cis_penalty_applied"],
+                "cis_violations":      cis_viol,
+                "response_urgency":    classification.get("response_urgency"),
+                "priority":            classification.get("priority"),
+                "_l4_path":            "engine_1_scorer+cis",
+            }
+        except Exception as e:
+            logger.warning("[L4] engine_1_scorer failed (%s) — falling to inmemory_cvss", e)
+
+    # ── Path 2: inmemory_cvss (anomaly_score formula + tactic bonus) ──────
     try:
         from layer_4_cvss.inmemory_cvss import score_detection
-        e1 = detection.get("engine_1_anomaly", {})
-        e2 = detection.get("engine_2_threat_intel", {})
-        # Pull AI CVSS vector if Layer 3 ran
-        ai_cvss = None
-        l3 = detection.get("ai_analysis") or {}
-        if isinstance(l3, dict) and l3.get("_cvss_vector"):
-            ai_cvss = l3["_cvss_vector"]
-        return score_detection(
+        result = score_detection(
             anomaly_score      = e1.get("anomaly_score", 0.0),
             mitre_tactic       = e2.get("mitre_tactic", ""),
             mitre_technique    = e2.get("mitre_technique", ""),
             threat_intel_match = e2.get("threat_intel_match", False),
             is_master          = detection.get("is_master", False),
-            ai_cvss_vector     = ai_cvss,
+            ai_cvss_vector     = ai_cvss_vec if isinstance(ai_cvss_vec, str) else None,
         )
+        # Apply CIS bonus on top of inmemory score when violations exist
+        if cis_viol:
+            cis_bonus = round(min(1.0, len(cis_viol) * 0.15), 2)  # +0.15 per violation, max +1.0
+            result["base_score"] = round(min(10.0, result["base_score"] + cis_bonus), 1)
+            result["cis_violations"]   = cis_viol
+            result["cis_penalty_applied"] = True
+            # Re-classify severity after CIS bump
+            s = result["base_score"]
+            result["severity"] = (
+                "CRITICAL" if s >= 9.0 else
+                "HIGH"     if s >= 7.0 else
+                "MEDIUM"   if s >= 4.0 else "LOW"
+            )
+            result["requires_auto_block"] = result["base_score"] >= 7.0
+        result["dora_compliance"] = bool(dora_report) or result.get("dora_compliance", False)
+        result["_l4_path"] = "inmemory_cvss"
+        logger.info(
+            "[L4] inmemory_cvss path — score=%.1f sev=%s",
+            result["base_score"], result["severity"]
+        )
+        return result
     except Exception as e:
-        logger.warning("Layer 4 real engine failed (%s) — using inline formula", e)
-        e1   = detection.get("engine_1_anomaly", {})
-        e2   = detection.get("engine_2_threat_intel", {})
-        base = e1.get("anomaly_score", 0.0) * 10
-        ioc  = 0.5 if e2.get("threat_intel_match") else 0.0
-        score = round(min(10.0, base + ioc), 1)
-        if score >= 9.0:   sev = "CRITICAL"
-        elif score >= 7.0: sev = "HIGH"
-        elif score >= 4.0: sev = "MEDIUM"
-        else:              sev = "LOW"
-        return {"base_score": score, "severity": sev,
-                "requires_auto_block": score >= 7.0, "dora_compliance": None,
-                "_layer4_error": str(e)}
+        logger.warning("[L4] inmemory_cvss failed (%s) — using inline formula", e)
+
+    # ── Path 3: Inline last-resort formula ───────────────────────────────
+    base  = e1.get("anomaly_score", 0.0) * 10
+    ioc   = 0.5 if e2.get("threat_intel_match") else 0.0
+    score = round(min(10.0, base + ioc), 1)
+    sev   = (
+        "CRITICAL" if score >= 9.0 else
+        "HIGH"     if score >= 7.0 else
+        "MEDIUM"   if score >= 4.0 else "LOW"
+    )
+    return {
+        "base_score": score, "severity": sev,
+        "requires_auto_block": score >= 7.0,
+        "dora_compliance": False,
+        "_l4_path": "inline_fallback",
+    }
 
 
 # ── Layer 3 — AI analysis via safe_runner ────────────────────────────────
@@ -728,13 +916,180 @@ def _layer3_ai(detection: dict) -> dict | None:
     Delegate to layer_3_ai_analysis.safe_runner which:
       - Checks Ollama availability before importing ai_orchestrator
       - Patches out the Rich live-UI thread so it doesn't crash the pipeline
-      - Returns {intent, summary, kibana_query} or None if Ollama offline
+      - Returns {intent, summary, kibana_query, _cvss_vector, _cis_violations} or None
+
+    Output keys consumed by Layer 4:
+      _cvss_vector   : CVSS v3.1 vector string from AI (e.g. AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H)
+      _cis_violations: list[dict] from CIS layer, forwarded through for CVSS engine_1_scorer
     """
     try:
         from layer_3_ai_analysis.safe_runner import run_layer3
-        return run_layer3(detection)
+        raw = run_layer3(detection)
+        if not raw:
+            return None
+
+        # Normalise — safe_runner may return nested {ai_analysis: {...}}
+        if "ai_analysis" in raw and isinstance(raw["ai_analysis"], dict):
+            inner = raw["ai_analysis"]
+        else:
+            inner = raw
+
+        # Build the frontend-friendly contract
+        result: dict = {
+            "intent":   inner.get("intent")   or inner.get("intent_label"),
+            "summary":  inner.get("narrative") or inner.get("summary"),
+            "kibana_query": inner.get("kibana_query"),
+        }
+
+        # Forward AI CVSS vector to Layer 4 (may be a dict or string)
+        cvss_vec = inner.get("cvss_vector")
+        if cvss_vec:
+            result["_cvss_vector"] = cvss_vec
+
+        # Forward CIS violations that were injected by Layer 2 → CIS check
+        cis_viol = detection.get("_cis_violations") or inner.get("cis_violations") or []
+        if cis_viol:
+            result["_cis_violations"] = cis_viol
+
+        # DORA compliance block from ai_orchestrator
+        dora = raw.get("dora_compliance")
+        if dora:
+            result["_dora_report"] = dora
+
+        return result
     except Exception as e:
         logger.debug("Layer 3 safe_runner failed: %s", e)
+        return None
+
+
+# ── Layer 5 — Response orchestrator (playbook + ticket) ──────────────────
+
+def _layer5_response_package(detection: dict, l4: dict, l3: dict | None) -> dict | None:
+    """
+    Layer 4 → Layer 5 handoff.
+
+    Calls the real Layer 5 engines:
+      - engine_1_action.action_recommender  → contextual recommendations
+      - playbook_generator                  → markdown playbook file
+      - ticket_creator                      → SOC ticket JSON file
+
+    Returns a `l5_response` block embedded into BackendDetection:
+    {
+      ticket_id      : str,
+      severity       : str,
+      recommendations: list[str],
+      playbook_path  : str,
+      ticket_path    : str,
+      auto_block     : bool,
+      priority       : str | None,
+      urgency        : str | None,
+    }
+    Returns None on failure (pipeline continues without crashing).
+    """
+    try:
+        from layer_5_response.engine_1_action.action_recommender import get_recommendations
+        from layer_5_response.playbook_generator import generate_markdown_playbook
+        from layer_5_response.ticket_creator import generate_soc_ticket
+        from layer_5_response.engine_1_action.auto_responder import execute_firewall_block, send_soc_alert
+    except ImportError as e:
+        logger.warning("[L5] Import failed (%s) — skipping response package", e)
+        return None
+
+    try:
+        raw_event     = detection.get("raw_event", {})
+        severity      = l4.get("severity", "LOW")
+        base_score    = l4.get("base_score", 0.0)
+        requires_block= l4.get("requires_auto_block", False)
+        attacker_ip   = raw_event.get("source_ip") or "Unknown"
+        affected_ent  = (
+            raw_event.get("affected_user") or
+            raw_event.get("affected_host") or
+            raw_event.get("destination_ip") or "Unknown"
+        )
+        intent_str = (
+            (l3 or {}).get("intent") or
+            detection.get("suggested_playbook", {}).get("title") or
+            "Unknown Threat"
+        )
+        dora_compliance = l4.get("dora_compliance", False)
+        dora_report     = (l3 or {}).get("_dora_report") if l3 else None
+        related_logs    = [detection]   # pass self as related log for playbook context
+        playbook_raw    = None
+        if detection.get("suggested_playbook"):
+            import json as _json
+            playbook_raw = _json.dumps(detection["suggested_playbook"], indent=2)
+
+        # 1. Get contextual recommendations
+        recommendations = get_recommendations(severity=severity, intent=intent_str)
+
+        # 2. Build incident dict for doc generators (matches Layer5Input schema)
+        incident_dict = {
+            "event_id":          detection.get("incident_id", "UNKNOWN"),
+            "base_score":        base_score,
+            "severity":          severity,
+            "requires_auto_block": requires_block,
+            "attacker_ip":       attacker_ip,
+            "affected_entity":   affected_ent,
+            "intent":            intent_str,
+            "dora_compliance":   dora_report,
+            "related_logs":      related_logs,
+            "playbook_raw":      playbook_raw,
+            "kibana_query":      (l3 or {}).get("kibana_query"),
+        }
+
+        # 3. Auto-block if required (log only — no live network calls in pipeline mode)
+        actions_taken: list[dict] = []
+        if requires_block and attacker_ip not in ("Unknown", "0.0.0.0"):
+            try:
+                block_result = execute_firewall_block(attacker_ip)
+                actions_taken.append(block_result)
+                logger.info("[L5] Auto-block triggered for %s → %s", attacker_ip, block_result.get("status"))
+            except Exception as be:
+                logger.debug("[L5] Auto-block call failed: %s", be)
+                actions_taken.append({"action": "firewall_block", "status": "SKIPPED", "error": str(be)})
+
+            try:
+                alert_result = send_soc_alert(detection.get("incident_id", "UNKNOWN"), severity)
+                actions_taken.append(alert_result)
+            except Exception as ae:
+                logger.debug("[L5] SOC alert call failed: %s", ae)
+
+        # 4. Generate playbook markdown file
+        try:
+            playbook_path = generate_markdown_playbook(incident_dict, recommendations)
+        except Exception as pe:
+            logger.debug("[L5] Playbook generation failed: %s", pe)
+            playbook_path = None
+
+        # 5. Generate SOC ticket JSON file
+        try:
+            ticket_path = generate_soc_ticket(
+                incident_dict, actions_taken, recommendations, playbook_path or ""
+            )
+        except Exception as te:
+            logger.debug("[L5] Ticket generation failed: %s", te)
+            ticket_path = None
+
+        l5_block = {
+            "ticket_id":       f"TICK-{detection.get('incident_id', 'UNKNOWN')}",
+            "severity":        severity,
+            "recommendations": recommendations,
+            "playbook_path":   playbook_path,
+            "ticket_path":     ticket_path,
+            "actions_taken":   actions_taken,
+            "auto_block":      requires_block,
+            "priority":        l4.get("priority"),
+            "urgency":         l4.get("response_urgency"),
+        }
+        logger.info(
+            "[L5] Response package OK — tid=%s sev=%s block=%s",
+            l5_block["ticket_id"], severity, requires_block,
+        )
+        return l5_block
+
+    except Exception as e:
+        logger.warning("[L5] Response package failed for %s: %s",
+                       detection.get("incident_id"), e)
         return None
 
 
@@ -798,17 +1153,26 @@ def _shape_detection(enriched: dict, l2: dict, l3: dict | None,
         "feature_warnings":      enriched.get("feature_warnings", []),
     }
 
-    # Layer 5 — Playbook selection (dynamic: user/IP/log_type injected)
+    # Layer 5 — Playbook selection (dynamic: user/IP/log_type/CIS injected)
+    # CIS violations stamped by main_orchestrator on l2 and l4
+    cis_violations_for_pb = (
+        e2.get("cis_violations")
+        or l4.get("cis_violations")
+        or []
+    )
     playbook = _layer5_playbook(
-        action        = action or "",
-        tactic        = e2.get("mitre_tactic", ""),
-        risk_sev      = l2r.get("severity", "LOW"),
-        log_type      = log_type,
-        affected_user = affected_user,
-        source_ip     = source_ip,
-        anomaly_score = e1.get("anomaly_score", 0.0),
+        action         = action or "",
+        tactic         = e2.get("mitre_tactic", ""),
+        risk_sev       = l2r.get("severity", "LOW"),
+        log_type       = log_type,
+        affected_user  = affected_user,
+        source_ip      = source_ip,
+        anomaly_score  = e1.get("anomaly_score", 0.0),
+        cis_violations = cis_violations_for_pb,
     )
 
+    # l5_response is set by run_pipeline after Layer 4 completes;
+    # hold a sentinel here so _shape_detection output is stable
     detection = {
         "incident_id":   _make_incident_id(enriched, idx),
         "timestamp":     ts,
@@ -917,44 +1281,97 @@ def run_pipeline(
             }
         _pipeline_status["layer_2"] = "done"
 
-        # Layer 3 — AI analysis (auto-detects Ollama, graceful fallback)
+        # ── Layer 2 → CIS: Run benchmark check on detection hits ──────
+        cis_violations: list[dict] = []
+        try:
+            _cis_dir = os.path.join(os.path.dirname(__file__), "tuxSOC-layer_CIS")
+            if _cis_dir not in sys.path:
+                sys.path.insert(0, _cis_dir)
+            from cis_checker import run_cis_check
+            cis_violations = run_cis_check(l2, enriched)
+            # Stamp into engine_2 so ai_orchestrator.py can read it
+            l2["engine_2_threat_intel"]["cis_violations"] = cis_violations
+            # Also stamp on enriched so Layer 3 partial carries it
+            enriched["_cis_violations"] = cis_violations
+        except Exception as e:
+            logger.debug("[CIS] check skipped: %s", e)
+
+        # ── Layer 3: AI analysis — receives Detection + CIS combined ──
         _pipeline_status["layer_3"] = "active"
         l3 = None
         if run_layer3:
+            # Build partial with CIS violations already embedded
             partial = _shape_detection(enriched, l2, None, {}, idx)
+            partial["_cis_violations"] = cis_violations  # forward to _layer3_ai
             l3 = _layer3_ai(partial)
         _pipeline_status["layer_3"] = "done" if run_layer3 else "idle"
 
-        # Layer 4 — Real CVSS scoring with DORA compliance
+        # Layer 4 — Full CVSS scoring: AI CVSS vector + CIS penalties
         _pipeline_status["layer_4"] = "active"
         try:
-            # Build a partial detection so Layer 4 can read engine_1/2 + optional AI vector
+            # Build partial detection with AI analysis so Layer 4
+            # can read: engine_1/2, ai_analysis._cvss_vector, ai_analysis._cis_violations
             partial_for_cvss = {
                 "engine_1_anomaly":      l2["engine_1_anomaly"],
                 "engine_2_threat_intel": l2["engine_2_threat_intel"],
-                "ai_analysis":           l3,
+                "ai_analysis":           l3,   # carries _cvss_vector + _cis_violations
                 "is_master":             False,
             }
             l4 = _layer4_cvss(partial_for_cvss)
         except Exception as e:
-            logger.warning("Layer 4 error on record %d: %s", idx, e)
-            l4 = {"base_score": 0.0, "severity": "LOW",
-                  "requires_auto_block": False, "dora_compliance": None,
-                  "_layer4_error": str(e)}
+            logger.warning("[L4] Error on record %d: %s", idx, e)
+            l4 = {
+                "base_score": 0.0, "severity": "LOW",
+                "requires_auto_block": False, "dora_compliance": None,
+                "_layer4_error": str(e),
+            }
         _pipeline_status["layer_4"] = "done"
+        logger.debug(
+            "[L4→L5] record %d: score=%.1f sev=%s path=%s",
+            idx, l4.get("base_score", 0), l4.get("severity"), l4.get("_l4_path"),
+        )
 
+        # Assemble BackendDetection from all layer outputs (Layer 5 playbook
+        # inline selection still runs inside _shape_detection via _layer5_playbook)
         detection = _shape_detection(enriched, l2, l3, l4, idx)
+
+        # ── Layer 4 → Layer 5: Response package (playbook file + SOC ticket) ──
+        _pipeline_status["layer_5"] = "active"
+        l5 = _layer5_response_package(detection, l4, l3)
+        if l5:
+            detection["l5_response"] = l5
+        _pipeline_status["layer_5"] = "done"
+
         detections.append(detection)
 
-    # ── Layer 5a: Real multi-event correlation (engine_3_correlation) ─
-    _pipeline_status["layer_5"] = "active"
+    # ── Correlation pass: multi-event timeline enrichment ─────────────
     try:
         from layer_2_detection.inmemory_correlator import enrich_all_correlations
         detections = enrich_all_correlations(detections)
     except Exception as e:
-        logger.warning("Layer 5 correlation enrichment failed: %s", e)
+        logger.warning("[L5-corr] Correlation enrichment failed: %s", e)
 
-    # ── Layer 5b: BEC kill-chain detection + master incident collapse ─
+    # ── BEC kill-chain detection + master incident collapse ───────────
     detections = _correlate_incidents(detections)
-    _pipeline_status["layer_5"] = "done"
+
+    # ── Layer 6: Broadcast detections to dashboard alert queue ───────────
+    _pipeline_status["layer_6"] = "active"
+    try:
+        from layer_6_dashboard.alert_broadcaster import broadcast_detections
+        kpis = broadcast_detections(detections)
+        logger.info(
+            "[L6] Dashboard broadcast OK — total_processed=%d critical=%d high=%d",
+            kpis.get("total_processed", 0),
+            kpis.get("critical_count", 0),
+            kpis.get("high_count", 0),
+        )
+    except Exception as e:
+        logger.warning("[L6] Dashboard broadcast failed: %s", e)
+    _pipeline_status["layer_6"] = "done"
+
+    logger.info(
+        "[Pipeline] Complete — %d detections produced (L4 paths: %s)",
+        len(detections),
+        ", ".join(d.get("layer4_cvss", {}).get("_l4_path", "?") for d in detections[:5]),
+    )
     return detections

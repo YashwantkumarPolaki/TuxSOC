@@ -7,7 +7,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { apiClient, checkHealth } from '../api/client'
-import { detectionToTicket, derivePipelineHealth } from '../api/adapters'
+import { groupAndMergeDetections, derivePipelineHealth } from '../api/adapters'
 import type { BackendDetection, IngestFileResponse } from '../types/backend'
 import type { Ticket } from '../types/ticket'
 import type { PipelineLayer } from '../types/pipeline'
@@ -224,8 +224,8 @@ export function useBackendData() {
       })
       const detections = res.data.detections ?? []
 
-      // Convert to tickets — REPLACE state entirely so card count = line count
-      const newTickets = detections.map(detectionToTicket)
+      // Merge all detections into grouped master tickets
+      const newTickets: Ticket[] = groupAndMergeDetections(detections)
       const newLogLines = detections.map(detectionToLogLine)
 
       setState(prev => {
@@ -236,7 +236,7 @@ export function useBackendData() {
           return { ...layer, status: 'ACTIVE' as const }
         })
 
-        const allTickets = [...newTickets]  // full replacement — not merge
+        const allTickets: Ticket[] = [...newTickets]
         const criticalCount = allTickets.filter(t => t.severity === 'CRITICAL').length
         const avgCvss = allTickets.length > 0
           ? allTickets.reduce((s, t) => s + t.cvssScore, 0) / allTickets.length
@@ -244,7 +244,6 @@ export function useBackendData() {
 
         return {
           ...prev,
-          // Replace — not merge — so ticket count exactly matches log line count
           tickets: allTickets,
           rawDetections: detections,
           layers,

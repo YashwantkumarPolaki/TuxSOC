@@ -1,6 +1,6 @@
 import json
 from ollama_client import run_inference
-from prompt_builder import build_batch_analysis_prompt
+from prompt_builder import build_batch_analysis_prompt, build_analysis_prompt_with_cis
 from json_parser import parse_llm_response
 
 # ─────────────────────────────────────────
@@ -25,8 +25,15 @@ def analyze_incident_master(state: dict) -> dict:
     )
     print(f"[L3-AI] [NODE 1] Analyzing Event {event_id}...")
 
-    # Pass the lean incident dict directly — no CIS cleaning, no cloning
-    prompt = build_batch_analysis_prompt(incident)
+    # Use CIS-aware prompt when violations are available
+    cis_violations = (
+        incident.get("_cis_violations")
+        or (incident.get("engine_2_threat_intel") or {}).get("cis_violations", [])
+    )
+    if cis_violations:
+        prompt = build_analysis_prompt_with_cis(incident, cis_violations)
+    else:
+        prompt = build_batch_analysis_prompt(incident)
     result = run_inference(prompt)
 
     print(f"[L3-AI] RAW AI OUTPUT: {result['response']}")

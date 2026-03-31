@@ -117,6 +117,99 @@ function deriveSuggestedPlaybook(d: BackendDetection): Ticket['suggestedPlaybook
   }
 }
 
+// ── Group & merge multiple detections into master tickets ─────────────────
+export function groupAndMergeDetections(detections: BackendDetection[]): Ticket[] {
+  // Group by playbook id → fall back to mitre_tactic
+  const groups = new Map<string, BackendDetection[]>()
+  for (const d of detections) {
+    const key = d.suggested_playbook?.id ?? d.engine_2_threat_intel.mitre_tactic ?? 'UNKNOWN'
+    if (!groups.has(key)) groups.set(key, [])
+    groups.get(key)!.push(d)
+  }
+
+  const masters: Ticket[] = []
+
+  for (const [, group] of groups) {
+    if (group.length === 1) {
+      masters.push(detectionToTicket(group[0]))
+      continue
+    }
+
+    // Pick the highest-severity detection as the base
+    const sevOrder: Record<string, number> = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 }
+    const base = [...group].sort((a, b) => {
+      const sa = a.layer4_cvss?.severity ?? deriveSeverity(a)
+      const sb = b.layer4_cvss?.severity ?? deriveSeverity(b)
+      return (sevOrder[sa] ?? 4) - (sevOrder[sb] ?? 4)
+    })[0]
+
+    const baseTicket = detectionToTicket(base)
+
+    // Composite CVSS — average of all scores across the group, capped at 10
+    const scores = group.map(d => deriveCVSS(d))
+    const maxCvss = Math.min(10, scores.reduce((sum, s) => sum + s, 0) / scores.length)
+
+    // Highest severity across the group
+    const severity = group
+      .map(d => deriveSeverity(d))
+      .sort((a, b) => (sevOrder[a] ?? 4) - (sevOrder[b] ?? 4))[0]
+
+    // Unique source IPs
+    const sourceIps = [...new Set(group.map(d => d.raw_event.source_ip).filter(Boolean))]
+
+    // Deduplicated response steps from all detections
+    const allSteps = group.flatMap(d => d.suggested_playbook?.steps ?? [])
+    const uniqueSteps = [...new Set(allSteps)]
+
+    // Deduplicated auto-remediation actions
+    const allAuto = group.flatMap(d => d.suggested_playbook?.auto_remediation ?? [])
+    const uniqueAuto = [...new Set(allAuto)]
+
+    // Combined attack timeline
+    const combinedTimeline = group.flatMap(d =>
+      d.engine_3_correlation.attack_timeline.map(e => ({
+        ...e,
+        detail: `[${d.raw_event.source_ip ?? '?'}] ${e.detail}`,
+      }))
+    )
+
+    // All affected entities
+    const allEntities = [...new Set(
+      group.map(d =>
+        d.raw_event.affected_user ?? d.raw_event.affected_host ?? d.raw_event.destination_ip
+      ).filter(Boolean)
+    )]
+
+    const masterTicket: Ticket = {
+      ...baseTicket,
+      id: `MASTER-${base.incident_id}`,
+      severity,
+      cvssScore: parseFloat(maxCvss.toFixed(1)),
+      isMaster: true,
+      eventCount: group.length,
+      attackerIp: sourceIps.slice(0, 3).join(', ') + (sourceIps.length > 3 ? ` +${sourceIps.length - 3} more` : ''),
+      affectedEntity: allEntities.slice(0, 2).join(', ') || baseTicket.affectedEntity,
+      correlatedLogIds: group.map(d => d.incident_id),
+      actionsTaken: combinedTimeline.map((e, i) => ({
+        id: `master-act-${i}`,
+        action: e.detail,
+        status: 'completed' as const,
+        timestamp: e.timestamp,
+        automated: true,
+      })),
+      suggestedPlaybook: baseTicket.suggestedPlaybook ? {
+        ...baseTicket.suggestedPlaybook,
+        steps: uniqueSteps,
+        autoRemediation: uniqueAuto,
+      } : null,
+    }
+
+    masters.push(masterTicket)
+  }
+
+  return masters
+}
+
 // ── Main adapter ──────────────────────────────────────────────────────────
 export function detectionToTicket(d: BackendDetection): Ticket {
   const severity = deriveSeverity(d)

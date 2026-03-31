@@ -99,13 +99,61 @@ function AttackPath({ ticket }: { ticket: Ticket }) {
   )
 }
 
+// ── Build analyst narrative from steps + ticket context ───────────────────
+function buildNarrative(steps: string[], ticket: Ticket): string {
+  if (steps.length === 0) return 'No response steps defined.'
+
+  const ip = ticket.attackerIp || 'the source host'
+  const entity = ticket.affectedEntity || 'the affected system'
+  const tactic = ticket.mitreTactics[0] || 'the detected threat'
+  const sev = ticket.severity
+  const count = ticket.eventCount ?? 1
+
+  // Split steps into phases: immediate (first 2), investigation (middle), closure (last)
+  const immediate   = steps.slice(0, 2)
+  const investigate = steps.slice(2, steps.length - 1)
+  const closure     = steps[steps.length - 1]
+
+  const countPhrase = count > 1
+    ? `A ${sev} severity incident has been confirmed across ${count} correlated log events`
+    : `A ${sev} severity incident has been detected`
+
+  const intro = `${countPhrase}, with ${tactic} activity originating from ${ip} targeting ${entity}.`
+
+  const immediatePart = immediate.length > 0
+    ? ` The immediate priority is to ${immediate[0].charAt(0).toLowerCase()}${immediate[0].slice(1)}${
+        immediate[1] ? `, and to ${immediate[1].charAt(0).toLowerCase()}${immediate[1].slice(1)}` : ''
+      }.`
+    : ''
+
+  const investigatePart = investigate.length > 0
+    ? ` During the investigation phase, analysts should ${
+        investigate
+          .map((s, i) => {
+            const lower = s.charAt(0).toLowerCase() + s.slice(1)
+            if (i === 0) return lower
+            if (i === investigate.length - 1) return `and ${lower}`
+            return lower
+          })
+          .join(', ')
+      }.`
+    : ''
+
+  const closurePart = closure
+    ? ` To close the incident, ${closure.charAt(0).toLowerCase()}${closure.slice(1)}.`
+    : ''
+
+  return `${intro}${immediatePart}${investigatePart}${closurePart}`
+}
+
 // ── Phased playbook viewer ────────────────────────────────────────────────
 function PhasedPlaybook({ ticket }: { ticket: Ticket }) {
   const pb = ticket.suggestedPlaybook!
   const phases = pb.phases
 
   if (!phases || phases.length === 0) {
-    // Flat steps fallback
+    const narrative = buildNarrative(pb.steps, ticket)
+
     return (
       <div className="rounded-xl overflow-hidden"
         style={{ backgroundColor: 'rgba(11,15,20,0.95)', border: '1px solid rgba(30,40,60,0.5)' }}>
@@ -115,16 +163,8 @@ function PhasedPlaybook({ ticket }: { ticket: Ticket }) {
           <span className="text-[9px] font-mono font-bold tracking-widest uppercase"
             style={{ color: '#64748b' }}>Response Steps</span>
         </div>
-        <div className="p-5 flex flex-col gap-2">
-          {pb.steps.map((step, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <span className="shrink-0 w-5 h-5 rounded flex items-center justify-center text-[9px] font-mono font-bold mt-0.5"
-                style={{ backgroundColor: 'rgba(59,130,246,0.15)', color: '#3B82F6' }}>
-                {i + 1}
-              </span>
-              <p className="text-[11px] font-mono leading-relaxed" style={{ color: '#94a3b8' }}>{step}</p>
-            </div>
-          ))}
+        <div className="p-5">
+          <p className="text-[11px] font-mono leading-loose" style={{ color: '#94a3b8' }}>{narrative}</p>
         </div>
       </div>
     )
@@ -263,13 +303,21 @@ function PlaybookViewer({ ticket }: { ticket: Ticket }) {
             <span className="text-[9px] font-mono font-bold tracking-widest uppercase"
               style={{ color: '#EF4444' }}>Auto-Remediation Actions</span>
           </div>
-          <div className="p-5 flex flex-col gap-2">
-            {pb.autoRemediation.map((action, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <CheckCircle2 size={12} className="shrink-0 mt-0.5" style={{ color: '#22C55E' }} />
-                <p className="text-[11px] font-mono leading-relaxed" style={{ color: '#64748b' }}>{action}</p>
-              </div>
-            ))}
+          <div className="p-5">
+            <p className="text-[11px] font-mono leading-loose" style={{ color: '#64748b' }}>
+              {(() => {
+                const actions = pb.autoRemediation
+                if (actions.length === 0) return 'No automated actions configured.'
+                const ip = ticket.attackerIp || 'the threat source'
+                const first = `In response to the detected activity from ${ip}, the following automated actions have been triggered: ${actions[0].charAt(0).toLowerCase()}${actions[0].slice(1)}`
+                const rest = actions.slice(1).map((a, i) => {
+                  const lower = a.charAt(0).toLowerCase() + a.slice(1)
+                  if (i === actions.length - 2) return `and finally ${lower}`
+                  return lower
+                })
+                return [first, ...rest].join(', ') + '.'
+              })()}
+            </p>
           </div>
         </div>
       )}

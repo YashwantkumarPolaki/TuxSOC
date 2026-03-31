@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+*.egg-info/
+
+# Generated tickets (runtime output)
+tuxsoc/backend/layer_5_response/shared/tickets/
+tuxsoc/backend/layer_5_response/shared/playbooks/
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+
+# Misc
+*.local
+.DS_Store
+tuxsoc_fix_report.pdf
+make_report.py

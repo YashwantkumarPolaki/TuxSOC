@@ -69,6 +69,24 @@ app.add_middleware(
 )
 
 
+# ── Root ──────────────────────────────────────────────────────────────────────
+@app.get("/")
+def root():
+    return {
+        "service": "TuxSOC — 7-Layer Security Pipeline",
+        "status": "running",
+        "endpoints": {
+            "health":    "/health",
+            "docs":      "/docs",
+            "ingest":    "POST /ingest_file  or  POST /ingest_json",
+            "pipeline":  "/pipeline/status",
+            "alerts":    "/api/v1/dashboard/alerts",
+            "kpis":      "/api/v1/dashboard/kpis",
+            "trend":     "/api/v1/dashboard/trend",
+        }
+    }
+
+
 # ── Health check ──────────────────────────────────────────────────────────────
 @app.get("/health")
 def health():
@@ -88,7 +106,43 @@ def pipeline_status():
         return {
             "layer_0": "idle", "layer_1": "idle", "layer_2": "idle",
             "layer_3": "idle", "layer_4": "idle", "layer_5": "idle",
+            "layer_6": "idle",
         }
+
+
+# ── Layer 6 Dashboard endpoints ───────────────────────────────────────────────
+@app.get("/api/v1/dashboard/alerts")
+def dashboard_alerts(limit: int = 50, severity: str | None = None):
+    """Proxy to Layer 6 alert broadcaster — returns recent alerts."""
+    try:
+        from layer_6_dashboard.alert_broadcaster import get_alerts
+        alerts = get_alerts(limit=limit, severity_filter=severity)
+        return {"count": len(alerts), "alerts": alerts}
+    except Exception as e:
+        logger.warning("dashboard/alerts unavailable: %s", e)
+        return {"count": 0, "alerts": []}
+
+
+@app.get("/api/v1/dashboard/kpis")
+def dashboard_kpis():
+    """Proxy to Layer 6 KPI counters."""
+    try:
+        from layer_6_dashboard.alert_broadcaster import get_kpis
+        return get_kpis()
+    except Exception as e:
+        logger.warning("dashboard/kpis unavailable: %s", e)
+        return {}
+
+
+@app.get("/api/v1/dashboard/trend")
+def dashboard_trend(last_n: int = 100):
+    """Proxy to Layer 6 severity trend."""
+    try:
+        from layer_6_dashboard.alert_broadcaster import get_severity_trend
+        return get_severity_trend(last_n=last_n)
+    except Exception as e:
+        logger.warning("dashboard/trend unavailable: %s", e)
+        return {"CRITICAL": 0, "HIGH": 0, "MEDIUM": 0, "LOW": 0}
 
 
 # ── Shared pipeline runner ────────────────────────────────────────────────────

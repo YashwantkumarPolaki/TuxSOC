@@ -94,6 +94,39 @@ def build_batch_analysis_prompt(incident: dict) -> str:
 }}"""
 
 
+def build_analysis_prompt_with_cis(incident: dict, cis_violations: list) -> str:
+    """
+    Extended prompt that includes CIS violation context alongside the detection.
+    Called by safe_runner / ai_orchestrator when CIS violations are available.
+    Wraps build_batch_analysis_prompt and appends a CIS violations block.
+    """
+    base_prompt = build_batch_analysis_prompt(incident)
+    if not cis_violations:
+        return base_prompt
+
+    cis_lines = []
+    for v in cis_violations[:5]:   # cap at 5 to save tokens
+        cis_lines.append(
+            f"  - [{v.get('benchmark_id')}] {v.get('title')} "
+            f"(Severity: {v.get('severity')}, "
+            f"Rationale: {v.get('rationale', '')})"
+        )
+    cis_block = "\n".join(cis_lines)
+
+    return base_prompt + f"""
+
+### CIS BENCHMARK VIOLATIONS TRIGGERED (from Layer 2 \u2192 CIS check):
+The following CIS controls were violated by the detected activity.
+Factor these into your intent classification, CVSS vector, and recommended actions.
+
+{cis_block}
+
+IMPORTANT: If CIS-AUTH-001 or CIS-AUTH-004 are present, escalate severity to >= 'high'.
+If CIS-EP-002 (credential dumping) is present, set severity to 'critical'.
+If CIS-NET-001 is present, set CVSS AV to 'N' (network-accessible).
+"""
+
+
 DORA_SYSTEM_CONTEXT = """You are a DORA Compliance Officer at Barclays.
 Evaluate the incident against Article 18 criteria (C1-C6) and produce an Article 19 T+4h Initial Notification.
 Output ALWAYS in pure JSON, no markdown.
