@@ -1,0 +1,112 @@
+[
+  {
+    "IpAddress": "193.168.0.50",
+    "UserPrincipalName": "finance_mgr@bank.local",
+    "OperationName": "UserLoginFailed",
+    "@timestamp": "2024-04-03T02:14:00Z",
+    "RiskState": "atRisk",
+    "RiskLevel": "high",
+    "RiskEventTypes": "unfamiliarFeatures,anonymizedIPAddress",
+    "Location": "Moscow, Russia",
+    "ClientAppUsed": "Browser"
+  },
+  {
+    "IpAddress": "193.168.0.50",
+    "UserPrincipalName": "finance_mgr@bank.local",
+    "OperationName": "UserLoggedIn",
+    "@timestamp": "2024-04-03T02:17:00Z",
+    "RiskState": "atRisk",
+    "RiskLevel": "high",
+    "RiskEventTypes": "unfamiliarFeatures,anonymizedIPAddress",
+    "Location": "Moscow, Russia",
+    "ClientAppUsed": "Browser"
+  },
+  {
+    "IpAddress": "193.168.0.50",
+    "UserPrincipalName": "finance_mgr@bank.local",
+    "OperationName": "New-InboxRule",
+    "@timestamp": "2024-04-03T02:19:00Z",
+    "RiskState": "atRisk",
+    "RiskLevel": "high",
+    "RiskEventTypes": "unfamiliarFeatures",
+    "Location": "Moscow, Russia",
+    "ClientAppUsed": "Browser"
+  },
+  {
+    "IpAddress": "193.168.0.50",
+    "UserPrincipalName": "finance_mgr@bank.local",
+    "OperationName": "MailItemsAccessed",
+    "@timestamp": "2024-04-03T02:22:00Z",
+    "RiskState": "atRisk",
+    "RiskLevel": "high",
+    "RiskEventTypes": "unfamiliarFeatures",
+    "Location": "Moscow, Russia",
+    "ClientAppUsed": "Browser"
+  },
+  {
+    "IpAddress": "193.168.0.50",
+    "UserPrincipalName": "finance_mgr@bank.local",
+    "OperationName": "FileDownloaded",
+    "@timestamp": "2024-04-03T02:25:00Z",
+    "RiskState": "atRisk",
+    "RiskLevel": "high",
+    "RiskEventTypes": "unfamiliarFeatures",
+    "Location": "Moscow, Russia",
+    "ClientAppUsed": "Browser"
+  },
+  {
+    "IpAddress": "193.168.0.50",
+    "UserPrincipalName": "finance_mgr@bank.local",
+    "OperationName": "FileSyncDownloaded",
+    "@timestamp": "2024-04-03T02:27:00Z",
+    "RiskState": "atRisk",
+    "RiskLevel": "high",
+    "RiskEventTypes": "unfamiliarFeatures",
+    "Location": "Moscow, Russia",
+    "ClientAppUsed": "SyncClient"
+  },
+  {
+    "IpAddress": "10.0.2.15",
+    "UserPrincipalName": "sysadmin@bank.local",
+    "OperationName": "UserLoggedIn",
+    "@timestamp": "2024-04-03T09:05:00Z",
+    "RiskState": "none",
+    "RiskLevel": "none",
+    "RiskEventTypes": "",
+    "Location": "London, UK",
+    "ClientAppUsed": "MobileApp"
+  },
+  {
+    "IpAddress": "45.33.22.11",
+    "UserPrincipalName": "it_support@bank.local",
+    "OperationName": "UserLoginFailed",
+    "@timestamp": "2024-04-03T03:10:00Z",
+    "RiskState": "atRisk",
+    "RiskLevel": "medium",
+    "RiskEventTypes": "anonymizedIPAddress",
+    "Location": "Unknown",
+    "ClientAppUsed": "Browser"
+  },
+  {
+    "IpAddress": "45.33.22.11",
+    "UserPrincipalName": "it_support@bank.local",
+    "OperationName": "UserLoginFailed",
+    "@timestamp": "2024-04-03T03:11:00Z",
+    "RiskState": "atRisk",
+    "RiskLevel": "medium",
+    "RiskEventTypes": "anonymizedIPAddress",
+    "Location": "Unknown",
+    "ClientAppUsed": "Browser"
+  },
+  {
+    "IpAddress": "45.33.22.11",
+    "UserPrincipalName": "it_support@bank.local",
+    "OperationName": "UserLoggedIn",
+    "@timestamp": "2024-04-03T03:14:00Z",
+    "RiskState": "atRisk",
+    "RiskLevel": "medium",
+    "RiskEventTypes": "anonymizedIPAddress",
+    "Location": "Unknown",
+    "ClientAppUsed": "Browser"
+  }
+]

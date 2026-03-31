@@ -61,6 +61,11 @@ cd layer_0_ingestion
 uvicorn fastapi_receiver:app --host 0.0.0.0 --port 8000 --reload
 ```
 
+
+Analysis
+python -m layer_3_ai_analysis.app
+
+
 The API will be available at: **http://localhost:8000**
 
 ## API Endpoints

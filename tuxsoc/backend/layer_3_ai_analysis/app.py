@@ -136,8 +136,23 @@ async def analyze(background_tasks: BackgroundTasks, data: Union[dict, list] = B
         )
 
 if __name__ == "__main__":
+    import logging
+    import traceback
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8003)
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s  %(levelname)-8s  %(name)s  %(message)s",
+        datefmt="%H:%M:%S",
+    )
+
+    print("Starting tuxSOC Layer 3 on 0.0.0.0:8003 ...")
+    try:
+        uvicorn.run(app, host="0.0.0.0", port=8003, log_level="info", access_log=True)
+    except Exception:
+        print("FATAL — Layer 3 failed to start:")
+        print(traceback.format_exc())
+        input("Press ENTER to close...")
 
 
 

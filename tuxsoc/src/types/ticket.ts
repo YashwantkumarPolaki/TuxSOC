@@ -47,4 +47,5 @@ export interface Ticket {
   isMaster?: boolean
   correlatedLogIds?: string[]
   eventCount?: number
+  parentIncidentId?: string
 }

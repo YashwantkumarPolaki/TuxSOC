@@ -236,20 +236,21 @@ export function useBackendData() {
           return { ...layer, status: 'ACTIVE' as const }
         })
 
-        const criticalCount = newTickets.filter(t => t.severity === 'CRITICAL').length
-        const avgCvss = newTickets.length > 0
-          ? newTickets.reduce((s, t) => s + t.cvssScore, 0) / newTickets.length
+        const allTickets = [...newTickets]  // full replacement — not merge
+        const criticalCount = allTickets.filter(t => t.severity === 'CRITICAL').length
+        const avgCvss = allTickets.length > 0
+          ? allTickets.reduce((s, t) => s + t.cvssScore, 0) / allTickets.length
           : 0
 
         return {
           ...prev,
           // Replace — not merge — so ticket count exactly matches log line count
-          tickets: newTickets,
+          tickets: allTickets,
           rawDetections: detections,
           layers,
           logStream: [...newLogLines, ...prev.logStream].slice(0, 200),
           kpi: {
-            totalTickets: newTickets.filter(t => t.status !== 'RESOLVED').length,
+            totalTickets: allTickets.filter(t => t.status !== 'RESOLVED').length,
             criticalCount,
             avgCvss: parseFloat(avgCvss.toFixed(1)),
             layersOnline: layers.filter(l => l.status === 'ACTIVE').length,

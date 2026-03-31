@@ -101,7 +101,7 @@ export interface SuggestedPlaybook {
 export interface BackendDetection {
   incident_id:          string
   timestamp:            string
-  log_type:             'network' | 'endpoint' | 'auth' | 'firewall' | 'iot'
+  log_type:             'network' | 'endpoint' | 'auth' | 'firewall' | 'iot' | 'web' | 'azure_ad' | 'office365' | 'sharepoint'
   format?:              string
   raw_event:            RawEvent
   engine_1_anomaly:     Engine1Anomaly
@@ -115,6 +115,8 @@ export interface BackendDetection {
   correlated_log_ids?:  string[]
   affected_user?:       string
   event_count?:         number
+  // Batch correlation fields (set by frontend correlateDetections or backend correlator)
+  parent_incident_id?:  string
 }
 
 export interface IngestFileResponse {

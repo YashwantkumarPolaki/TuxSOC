@@ -34,6 +34,11 @@ from typing import Any
 
 logger = logging.getLogger("main_orchestrator")
 
+# ── Ensure layer_0_ingestion is on the path so `ingestion.*` imports work ──
+_L0_PATH = os.path.join(os.path.dirname(__file__), "layer_0_ingestion")
+if _L0_PATH not in sys.path:
+    sys.path.insert(0, _L0_PATH)
+
 # ── Pipeline status tracker (read by /pipeline/status endpoint) ──────────
 _pipeline_status: dict[str, Any] = {
     "layer_0": "idle", "layer_1": "idle", "layer_2": "idle",
@@ -545,7 +550,7 @@ _BEC_MASTER_PLAYBOOK["steps"] = [
 # ── Kill-chain pattern detector ───────────────────────────────────────────
 
 _BEC_PATTERN = {
-    "risky_signin": ["sign-in", "signin"],
+    "risky_signin": ["sign-in", "signin", "userloggedin", "userlogin", "loggedin", "logon"],
     "inbox_rule":   ["new-inboxrule", "inbox rule", "inboxrule"],
     "exfiltration": ["filedownloaded", "filesyncdownloaded", "mailitemsaccessed"],
 }

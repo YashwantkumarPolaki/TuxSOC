@@ -11,9 +11,11 @@ import type { PipelineLayer } from '../types/pipeline'
 // ── Severity mapping ──────────────────────────────────────────────────────
 function deriveSeverity(d: BackendDetection): Severity {
   // If Layer 4 CVSS has scored this event, use its authoritative severity
+  // but explicitly reject "NONE" — fall through to anomaly-score branch
   if (d.layer4_cvss?.severity) {
     const s = d.layer4_cvss.severity.toUpperCase()
     if (s === 'CRITICAL' || s === 'HIGH' || s === 'MEDIUM' || s === 'LOW') return s as Severity
+    // "NONE" or any other invalid value falls through below
   }
 
   const score = d.engine_1_anomaly.anomaly_score
@@ -31,8 +33,10 @@ function deriveSeverity(d: BackendDetection): Severity {
 
 // ── CVSS score — Layer 4 base_score takes priority ────────────────────────
 function deriveCVSS(d: BackendDetection): number {
-  // Use the authoritative Layer 4 score when available
-  if (typeof d.layer4_cvss?.base_score === 'number') {
+  // Use the authoritative Layer 4 score only when it is a meaningful positive value
+  if (typeof d.layer4_cvss?.base_score === 'number'
+      && d.layer4_cvss.base_score > 0
+      && d.layer4_cvss.severity !== 'NONE') {
     return parseFloat(Math.min(10, d.layer4_cvss.base_score).toFixed(1))
   }
   // Fallback: approximate from anomaly_score (BACKEND.md formula)
@@ -82,10 +86,9 @@ function deriveIntent(d: BackendDetection): string {
     return action
   }
 
-  // Fallback: synthesise a clean title from log type + source IP
+  // Fallback: synthesise a clean title from log type + incident_id
   const logType = d.log_type.charAt(0).toUpperCase() + d.log_type.slice(1)
-  const srcIp = d.raw_event.source_ip ?? 'unknown source'
-  return `${logType} activity from ${srcIp}`
+  return `${logType} Event: ${d.incident_id}`
 }
 
 // ── AI Analysis field ─────────────────────────────────────────────────────
@@ -149,6 +152,7 @@ export function detectionToTicket(d: BackendDetection): Ticket {
     isMaster: d.is_master,
     correlatedLogIds: d.correlated_log_ids,
     eventCount: d.event_count,
+    parentIncidentId: d.parent_incident_id,
   }
 }
 
